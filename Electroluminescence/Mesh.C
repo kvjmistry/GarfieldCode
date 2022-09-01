@@ -23,7 +23,6 @@ using namespace Garfield;
 std::ofstream myfile;
 int event = 0;
 
-
 void userHandle(double x, double y, double z, double t,
                 int type, int level, Garfield::Medium* /*m*/) {
 
@@ -32,6 +31,7 @@ void userHandle(double x, double y, double z, double t,
 
     // Write information to a histogram
     myfile << event << "," << x << "," << y << "," << z << ","<< t << "\n";
+    // std::cout << event << "," << x << "," << y << "," << z << ","<< t << "\n";
 }
 
 
@@ -39,20 +39,18 @@ void userHandle(double x, double y, double z, double t,
 
 int main(int argc, char * argv[]) {
     
-    auto start = std::chrono::high_resolution_clock::now(); // Start time of script
-
     std::cout << "The event number is: " << argv[1] << std::endl;
     event = std::stoi(argv[1]);
 
     TApplication app("app", &argc, argv);
 
     // Initialize the csv file
-    myfile.open ("Data.csv");
+    myfile.open("Data.csv");
 
     // Simulation parameters
 
     // Number of primary electrons (avalanches) to simulate
-    constexpr unsigned int npe = 1;
+    constexpr unsigned int npe = 2;
     
     // Choose whether to plot the field maps
     bool plotmaps = true;
@@ -62,6 +60,12 @@ int main(int argc, char * argv[]) {
 
     // Verbose Print
     constexpr bool print = true;
+
+    // Mesh Boundary Zone
+    double MeshBoundary = 0.65; // cm
+
+    // Start Z
+    double z0 = 0.65; //cm
 
     // ----- 
 
@@ -107,7 +111,6 @@ int main(int argc, char * argv[]) {
         fieldViewXZ.SetComponent(fm);
         fieldViewXZ.SetNumberOfContours(100);
         fieldViewXZ.SetPlane(0, -1, 0, 0, 0, 0);
-        // fieldViewXZ.SetVoltageRange(-160., 160.);
         fieldViewXZ.Plot("emag", "colz");
     }
 
@@ -129,14 +132,15 @@ int main(int argc, char * argv[]) {
     ViewDrift driftView;
     aval.EnablePlotting(&driftView);
 
+    // Enable handle to retrieve all the inelastic (VUV gamma production) collisions
     aval.SetUserHandleInelastic(userHandle);
 
     
     std::vector<unsigned int> nVUV;
 
     TRandom3 rng; // Random number generators for x and y positions
-    // int seed = 1;
-    // rng.SetSeed(seed);
+    int seed = 1;
+    rng.SetSeed(seed);
     
     // Calculate a few avalanches.
     for (unsigned int i = 0; i < npe; ++i) {
@@ -146,21 +150,20 @@ int main(int argc, char * argv[]) {
         // Release the primary electron near the top mesh.
         bool sample_pos = true;
 
-        double x0 = rng.Uniform(-0.65, 0.65);
-        double y0 = rng.Uniform(-0.65, 0.65);
+        double x0 = rng.Uniform(-1*MeshBoundary, MeshBoundary);
+        double y0 = rng.Uniform(-1*MeshBoundary, MeshBoundary);
 
         while(sample_pos){
             if (std::sqrt(x0*x0 + y0*y0) < 0.7){
                 std::cout << "Sampled position is valid!" << std::endl;
-                break;
+                sample_pos = false;
             }
             else{
-                x0 = rng.Uniform(-0.65, 0.65);
-                y0 = rng.Uniform(-0.65, 0.65);
+                x0 = rng.Uniform(-1*MeshBoundary, MeshBoundary);
+                y0 = rng.Uniform(-1*MeshBoundary, MeshBoundary);
             }
         }
         
-        const double z0 = 0.65;
         const double t0 = 0.;
         double r = std::sqrt(x0*x0 + y0*y0);
 
@@ -205,6 +208,8 @@ int main(int argc, char * argv[]) {
             if (status == -5) {
                 
                 // The electron left the drift medium.
+                
+                // Landed on the bottom electrode
                 if (z2 < -0.4) {
                     ++nBottomPlane;
                 }
@@ -231,7 +236,7 @@ int main(int argc, char * argv[]) {
         unsigned int nExc = 0;
         unsigned int nSup = 0;
         gas.GetNumberOfElectronCollisions(nEl, nIon, nAtt, nInel, nExc, nSup);
-        gas.ResetCollisionCounters();                                      
+        gas.ResetCollisionCounters();
         nVUV.push_back(nExc + ni);
         
         if (!print) continue;
@@ -243,14 +248,7 @@ int main(int argc, char * argv[]) {
                 << "  Number of excitations: " << nExc << "\n";
     }
 
-    // Fill distribution of the number of VUV photons.
-    auto nMinVUV = *std::min_element(nVUV.cbegin(), nVUV.cend());
-    auto nMaxVUV = *std::max_element(nVUV.cbegin(), nVUV.cend());
-    
-    TCanvas* cf4 = new TCanvas("cf4", "", 600, 600);
-    TH1D hVUV("hVUV", "", nMaxVUV - nMinVUV, nMinVUV, nMaxVUV);
-    hVUV.StatOverflows(true); 
-    
+    // Print the num of VUV photons
     std::cout << "Printing number of VUV photons per event" << std::endl;
     for (const auto& n : nVUV){
         std::cout << n << std::endl;
@@ -271,17 +269,9 @@ int main(int argc, char * argv[]) {
         meshView->Plot();
     }
 
-    // Finished!
-    std::cout << "\033[0;32m*** \t Exiting Garfield++ Simulation... \t *** \033[0m" << std::endl;
-    auto stop = std::chrono::high_resolution_clock::now();  // end time of script
-    auto duration_sec = std::chrono::duration_cast<std::chrono::seconds>(stop - start); // time taken to run script
-    auto duration_min = std::chrono::duration_cast<std::chrono::minutes>(stop - start); // time taken to run script
-    std::cout << "Time taken by function: " << duration_sec.count() << " seconds" << std::endl; 
-    std::cout << "Time taken by function: " << duration_min.count() << " minutes" << std::endl; 
+    myfile.close();
 
     app.Run(true);
-
-    myfile.close();
 
 }
 
