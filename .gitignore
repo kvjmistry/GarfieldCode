@@ -1,3 +1,5 @@
 *build*
-*.vs_code
+*.vscode*
 *DS*
+Electroluminescence/Data.csv
+*Data.csv*
