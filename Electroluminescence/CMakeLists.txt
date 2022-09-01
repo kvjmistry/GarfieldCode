@@ -5,11 +5,5 @@ if(NOT TARGET Garfield::Garfield)
 endif()
 
 # ---Define executables---------------------------------------------------------
-add_executable(example example.C)
-target_link_libraries(example Garfield::Garfield)
-
-add_executable(userHandle userHandle.C)
-target_link_libraries(userHandle Garfield::Garfield)
-
 add_executable(Mesh Mesh.C)
 target_link_libraries(Mesh Garfield::Garfield)

@@ -50,10 +50,10 @@ int main(int argc, char * argv[]) {
     // Simulation parameters
 
     // Number of primary electrons (avalanches) to simulate
-    constexpr unsigned int npe = 2;
+    const unsigned int npe = std::stoi(argv[2]);
     
     // Choose whether to plot the field maps
-    bool plotmaps = true;
+    bool plotmaps = false;
 
     // Width of the parallel gap [cm]
     constexpr double yGap = 1.0;
