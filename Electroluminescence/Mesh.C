@@ -18,10 +18,35 @@
 #include "Garfield/AvalancheMC.hh"
 #include "Garfield/Random.hh"
 
+/*
+Run info:
+Compile by making a build directory
+$ cd build
+$ cmake ..
+make;
+
+To run:
+# evt id, num e-, seed, grid, jobid, rotated
+./build/Mesh 0 1 1 0 0 0
+*/
+
+
 using namespace Garfield;
 
-std::ofstream myfile;
 int event = 0;
+
+std::vector<std::vector<float>> evtInfo;
+std::vector<std::string> metadata;
+
+// enums for config variables
+enum eVars {
+    k_evt,
+    k_x,
+    k_y,
+    k_z,
+    k_t,
+    k_config_MAX
+    };
 
 void userHandle(double x, double y, double z, double t,
                 int type, int level, Garfield::Medium* /*m*/) {
@@ -29,9 +54,16 @@ void userHandle(double x, double y, double z, double t,
     // Skip inelastic collisions that are not excitations.
     if (type != 4) return;
 
-    // Write information to a histogram
-    myfile << event << "," << x << "," << y << "," << z << ","<< t << "\n";
-    // std::cout << event << "," << x << "," << y << "," << z << ","<< t << "\n";
+    std::vector<float> temp;
+
+    // Save information in a vector
+    temp.push_back(event);
+    temp.push_back(x);
+    temp.push_back(y);
+    temp.push_back(z);
+    temp.push_back(t);
+
+    evtInfo.push_back(temp);
 }
 
 
@@ -40,12 +72,17 @@ void userHandle(double x, double y, double z, double t,
 int main(int argc, char * argv[]) {
     
     std::cout << "The event number is: " << argv[1] << std::endl;
+    std::cout << "Simulating a total of " << argv[2] << " electrons" << std::endl;
+    std::cout << "The seed number is: " << argv[3] << std::endl;
+    std::cout << "Using the grid? " << argv[4] << std::endl;
+    std::cout << "JobID " << argv[5] << std::endl;
+    std::cout << "Rotate the Mesh? " << argv[6] << std::endl;
+    std::cout << "\n" << std::endl;
+
+    // Set the event number
     event = std::stoi(argv[1]);
 
     TApplication app("app", &argc, argv);
-
-    // Initialize the csv file
-    myfile.open("Data.csv");
 
     // Simulation parameters
 
@@ -53,32 +90,58 @@ int main(int argc, char * argv[]) {
     const unsigned int npe = std::stoi(argv[2]);
     
     // Choose whether to plot the field maps
-    bool plotmaps = false;
-
-    // Width of the parallel gap [cm]
-    constexpr double yGap = 1.0;
-
-    // Verbose Print
-    constexpr bool print = true;
+    bool plotmaps = true;
 
     // Mesh Boundary Zone
     double MeshBoundary = 0.65; // cm
+    double MeshSampleR = 0.45; // cm -- Circle radius to sample within
+
+    // Gas Physics
+    double temperature = 293.15; // Kelvin
+    double torr = 750.062;
+    double pressure = 13.5*torr; // Give pressure in bar and convert it to torr
 
     // Start Z
     double z0 = 0.65; //cm
+
+    // SEED
+    int seed = std::stoi(argv[3]);
+
+    // Choose to run on the grid or not
+    int usegrid = std::stoi(argv[4]);
+
+    // Job id
+    char *jobid = argv[5];
+
+    // Rotate the mesh
+    bool rotate = argv[6];
+
+    // File Home
+    std::string home;
+    bool terminate;
+    
+    if (usegrid == 0){
+        home= "Files/";
+        terminate = false;
+    }
+    else {
+        home = "/n/home05/kvjmistry/packages/GarfieldCode/Electroluminescence/Files";
+        terminate = true;
+    }
+    
 
     // ----- 
 
 
     // Setup the gas.
     MediumMagboltz gas("xe");
-    gas.SetTemperature(293.15);
-    gas.SetPressure(7500.62);
+    gas.SetTemperature(temperature);
+    gas.SetPressure(pressure);
     gas.Initialise(true);  
     
     // Setup the electric potential map
     ComponentComsol* fm = new ComponentComsol(); // Field Map
-    fm->Initialise("Files/Aligned_Mesh.mphtxt","Files/AlignedMesh_MaterialProperties.txt", "Files/Aligned_Mesh_Data", "mm");
+    fm->Initialise(home + "Aligned_Mesh.mphtxt",home + "Mesh_MaterialProperties.txt", home + "Aligned_Mesh_Data", "mm");
     
     // Print some information about the cell dimensions.
     fm->PrintRange();
@@ -92,6 +155,7 @@ int main(int argc, char * argv[]) {
     if (plotmaps){
         ViewField fieldView;
         ViewField fieldViewXZ;
+        ViewField fieldViewXY;
         fieldView.SetComponent(fm);
         // Plot the potential along the central axis.
         fieldView.SetPlane(0, -1, 0, 0, 0, 0);
@@ -106,11 +170,21 @@ int main(int argc, char * argv[]) {
         TCanvas* cf2 = new TCanvas("cf2", "", 600, 600);
         cf2->SetLeftMargin(0.16);
         cf2->SetRightMargin(0.25);
+        fieldViewXY.SetArea(-0.7, -0.8, 0.7, 0.7); 
+        fieldViewXY.SetCanvas(cf2);
+        fieldViewXY.SetComponent(fm);
+        fieldViewXY.SetNumberOfContours(100);
+        fieldViewXY.SetPlane(0, -1, 0, 0, 0, 0);
+        fieldViewXY.Plot("emag", "colz");
+
+        TCanvas* cf3 = new TCanvas("cf3", "", 600, 600);
+        cf3->SetLeftMargin(0.16);
+        cf3->SetRightMargin(0.25);
         fieldViewXZ.SetArea(-0.7, -0.8, 0.7, 0.7); 
-        fieldViewXZ.SetCanvas(cf2);
+        fieldViewXZ.SetCanvas(cf3);
         fieldViewXZ.SetComponent(fm);
         fieldViewXZ.SetNumberOfContours(100);
-        fieldViewXZ.SetPlane(0, -1, 0, 0, 0, 0);
+        fieldViewXZ.SetPlane(0, 0, -1, 0, 0, -0.51);
         fieldViewXZ.Plot("emag", "colz");
     }
 
@@ -139,11 +213,11 @@ int main(int argc, char * argv[]) {
     std::vector<unsigned int> nVUV;
 
     TRandom3 rng; // Random number generators for x and y positions
-    int seed = 1;
     rng.SetSeed(seed);
     
     // Calculate a few avalanches.
     for (unsigned int i = 0; i < npe; ++i) {
+        std::cout << "--------------------------------\n" << std::endl;
 
         event++;
         
@@ -154,7 +228,7 @@ int main(int argc, char * argv[]) {
         double y0 = rng.Uniform(-1*MeshBoundary, MeshBoundary);
 
         while(sample_pos){
-            if (std::sqrt(x0*x0 + y0*y0) < 0.7){
+            if (std::sqrt(x0*x0 + y0*y0) < MeshSampleR){
                 std::cout << "Sampled position is valid!" << std::endl;
                 sample_pos = false;
             }
@@ -171,11 +245,9 @@ int main(int argc, char * argv[]) {
         const double e0 = i == 0 ? 1. : hEn.GetRandom();
         std::cout << "Avalanche "<< i + 1 << " of " << npe << ".\n";
         
-        if (print) {
-            std::cout << "  Primary electron starts at (x, y, z) = ("
-                        << x0 << ", " << y0 << ", " << z0 
-                        << ") with an energy of " << e0 << " eV.\n";
-        }
+        std::cout << "  Primary electron starts at (x, y, z) = ("
+                    << x0 << ", " << y0 << ", " << z0 
+                    << ") with an energy of " << e0 << " eV.\n";
         
         // Simulate the avalanche
         aval.AvalancheElectron(x0, y0, z0, t0, e0, 0, 0, 0);
@@ -199,11 +271,9 @@ int main(int argc, char * argv[]) {
             int status;
             aval.GetElectronEndpoint(ie, x1, y1, z1, t1, e1, x2, y2, z2, t2, e2, status);
 
-            if (print) {
             std::cout << "  Primary electron ends at (x, y, z) = ("
-                        << x2 << ", " << y2 << ", " << z2
-                        << ") with an energy of " << e2 << " eV.\n";
-        }
+                    << x2 << ", " << y2 << ", " << z2
+                    << ") with an energy of " << e2 << " eV.\n";
             
             if (status == -5) {
                 
@@ -225,8 +295,7 @@ int main(int argc, char * argv[]) {
                         << "(x2, y2, z2) = (" << x2 << ", " << y2 << ", " << z2 
                         << "), t2 = " << t2 << ", e2 = " << e2 << "\n";
             }
-        
-        
+
         }
         
         unsigned int nEl = 0;
@@ -239,13 +308,24 @@ int main(int argc, char * argv[]) {
         gas.ResetCollisionCounters();
         nVUV.push_back(nExc + ni);
         
-        if (!print) continue;
-        
         std::cout << "  Number of electrons: " << ne << " (" << nTopPlane 
                 << " of them ended on the top electrode and " << nBottomPlane 
                 << " on the bottom electrode)\n"
                 << "  Number of ions: " << ni << "\n"
                 << "  Number of excitations: " << nExc << "\n";
+    
+        metadata.push_back(std::to_string(event)     + "," + 
+                           std::to_string(ne)        + "," +
+                           std::to_string(ni)        + "," +
+                           std::to_string(nEl)       + "," + 
+                           std::to_string(nIon)      + "," + 
+                           std::to_string(nAtt)      + "," + 
+                           std::to_string(nInel)     + "," + 
+                           std::to_string(nExc)      + "," + 
+                           std::to_string(nSup)      + "," + 
+                           std::to_string(nTopPlane) + "," + 
+                           std::to_string(nBottomPlane));
+    
     }
 
     // Print the num of VUV photons
@@ -267,11 +347,42 @@ int main(int argc, char * argv[]) {
         meshView->EnableAxes();
         meshView->SetViewDrift(&driftView);
         meshView->Plot();
+
+    }
+
+    std::ofstream metafile;
+    
+    // Initialize the csv file
+    metafile.open(Form("Metadata_%s.csv", jobid));
+
+    metafile << "event,electrons,ions,elastic,ionisations,attachment,inelastic,excitation,super elastic,top,bottom"<< "\n";
+    
+    for (unsigned int i = 0; i < metadata.size(); i++){
+        std::cout << metadata.at(i)<< "\n";
+        metafile << metadata.at(i) << "\n";
+    }
+
+    metafile.close();
+
+    // --  
+
+    std::ofstream myfile;
+    
+    // Initialize the csv file
+    myfile.open(Form("EventInfo_%s.csv", jobid));
+    
+    myfile << "event,x,y,z,t" << "\n";
+    for (unsigned int i = 0; i < evtInfo.size(); i++){
+        // std::cout << evtInfo.at(i).at(k_evt)<< "," << evtInfo.at(i).at(k_x) << "," << evtInfo.at(i).at(k_y) << "," << evtInfo.at(i).at(k_z) << ","<< evtInfo.at(i).at(k_t) << "\n";
+        myfile << evtInfo.at(i).at(k_evt)<< "," << evtInfo.at(i).at(k_x) << "," << evtInfo.at(i).at(k_y) << "," << evtInfo.at(i).at(k_z) << ","<< evtInfo.at(i).at(k_t) << "\n";
     }
 
     myfile.close();
 
-    app.Run(true);
+    // Choose whether to open the app or not
+    if (!terminate){
+        app.Run(true);
+    }
 
 }
 
