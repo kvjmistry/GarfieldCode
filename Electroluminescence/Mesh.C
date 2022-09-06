@@ -127,6 +127,8 @@ int main(int argc, char * argv[]) {
     else {
         home = "/n/home05/kvjmistry/packages/GarfieldCode/Electroluminescence/Files/";
         terminate = true;
+        plotmaps = false;
+
     }
     
 
