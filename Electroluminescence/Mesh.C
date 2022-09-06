@@ -125,7 +125,7 @@ int main(int argc, char * argv[]) {
         terminate = false;
     }
     else {
-        home = "/n/home05/kvjmistry/packages/GarfieldCode/Electroluminescence/Files";
+        home = "/n/home05/kvjmistry/packages/GarfieldCode/Electroluminescence/Files/";
         terminate = true;
     }
     
