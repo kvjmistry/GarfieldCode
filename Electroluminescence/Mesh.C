@@ -324,9 +324,11 @@ int main(int argc, char * argv[]) {
                            std::to_string(nAtt)      + "," + 
                            std::to_string(nInel)     + "," + 
                            std::to_string(nExc)      + "," + 
-                           std::to_string(nSup)      + "," + 
-                           std::to_string(nTopPlane) + "," + 
-                           std::to_string(nBottomPlane));
+                           std::to_string(nTopPlane) + "," +  
+                           std::to_string(nBottomPlane) + "," + 
+                           std::to_string(x0) + "," + 
+                           std::to_string(y0) + "," + 
+                           std::to_string(z0));
     
     }
 
@@ -337,9 +339,9 @@ int main(int argc, char * argv[]) {
     }
 
     if (plotmaps){
-        TCanvas* cf3 = new TCanvas("cf3", "", 600, 600);
+        TCanvas* cf4 = new TCanvas("cf4", "", 600, 600);
         ViewFEMesh* meshView = new ViewFEMesh();
-        meshView->SetCanvas(cf3);
+        meshView->SetCanvas(cf4);
         meshView->SetComponent(fm);
         // x-z projection
         meshView->SetPlane(0, -1, 0, 0, 0, 0);
@@ -357,7 +359,7 @@ int main(int argc, char * argv[]) {
     // Initialize the csv file
     metafile.open(Form("Metadata_%s.csv", jobid));
 
-    metafile << "event,electrons,ions,elastic,ionisations,attachment,inelastic,excitation,super elastic,top,bottom"<< "\n";
+    // metafile << "event,electrons,ions,elastic,ionisations,attachment,inelastic,excitation,top,bottom,start x,start y,start z"<< "\n";
     
     for (unsigned int i = 0; i < metadata.size(); i++){
         std::cout << metadata.at(i)<< "\n";
@@ -373,7 +375,7 @@ int main(int argc, char * argv[]) {
     // Initialize the csv file
     myfile.open(Form("EventInfo_%s.csv", jobid));
     
-    myfile << "event,x,y,z,t" << "\n";
+    // myfile << "event,x,y,z,t" << "\n";
     for (unsigned int i = 0; i < evtInfo.size(); i++){
         // std::cout << evtInfo.at(i).at(k_evt)<< "," << evtInfo.at(i).at(k_x) << "," << evtInfo.at(i).at(k_y) << "," << evtInfo.at(i).at(k_z) << ","<< evtInfo.at(i).at(k_t) << "\n";
         myfile << evtInfo.at(i).at(k_evt)<< "," << evtInfo.at(i).at(k_x) << "," << evtInfo.at(i).at(k_y) << "," << evtInfo.at(i).at(k_z) << ","<< evtInfo.at(i).at(k_t) << "\n";
