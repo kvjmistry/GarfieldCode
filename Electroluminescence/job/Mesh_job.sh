@@ -11,8 +11,7 @@ start=`date +%s`
 
 # Set the configurable variables
 JOBNAME="Mesh"
-N_El=10
-N_EVENTS=1
+N_EVENTS=10
 
 # Create the directory
 cd $SCRATCH/guenette_lab/Users/$USER/
@@ -29,7 +28,7 @@ echo "The seed number is: ${SEED}" 2>&1 | tee -a log_nexus_"${SLURM_ARRAY_TASK_I
 
 # NEXUS
 echo "Running Garfield" 2>&1 | tee -a log_nexus_"${SLURM_ARRAY_TASK_ID}".txt
-/n/home05/kvjmistry/packages/GarfieldCode/Electroluminescence/build/Mesh ${SEED} ${N_El} ${SEED} 1 ${SLURM_ARRAY_TASK_ID} 0 2>&1 | tee -a log_nexus_"${SLURM_ARRAY_TASK_ID}".txt
+/n/home05/kvjmistry/packages/GarfieldCode/Electroluminescence/build/Mesh ${SEED} ${N_EVENTS} ${SEED} 1 ${SLURM_ARRAY_TASK_ID} 0 2>&1 | tee -a log_nexus_"${SLURM_ARRAY_TASK_ID}".txt
 
 echo; echo; echo;
 
