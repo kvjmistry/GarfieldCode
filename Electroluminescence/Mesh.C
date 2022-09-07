@@ -48,6 +48,17 @@ enum eVars {
     k_config_MAX
     };
 
+// Round to three decimal places to save on space in the file
+float roundDP(float var)
+{
+    // 37.66666 * 100 =3766.66
+    // 3766.66 + .5 =3767.16    for rounding off value
+    // then type cast to int so value is 3767
+    // then divided by 100 so the value converted into 37.67
+    float value = (int)(var * 1000 + .5);
+    return (float)value / 1000;
+}
+
 void userHandle(double x, double y, double z, double t,
                 int type, int level, Garfield::Medium* /*m*/) {
 
@@ -58,10 +69,10 @@ void userHandle(double x, double y, double z, double t,
 
     // Save information in a vector
     temp.push_back(event);
-    temp.push_back(x);
-    temp.push_back(y);
-    temp.push_back(z);
-    temp.push_back(t);
+    temp.push_back(roundDP(x));
+    temp.push_back(roundDP(y));
+    temp.push_back(roundDP(z));
+    temp.push_back(roundDP(t));
 
     evtInfo.push_back(temp);
 }
