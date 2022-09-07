@@ -7,6 +7,7 @@
 #include <TApplication.h>
 #include <TCanvas.h>
 #include <TH1F.h>
+#include <TF2.h>
 
 #include "Garfield/ComponentComsol.hh"
 #include "Garfield/MediumGas.hh"
@@ -108,7 +109,7 @@ int main(int argc, char * argv[]) {
     ViewField fieldViewXY;
 
     for (double z = 0.8; z>=-0.8;z-=0.01){
-        std::cout << z<< std::endl;
+        // std::cout << z<< std::endl;
         TCanvas* c = new TCanvas("c", "", 600, 600);
         c->SetLeftMargin(0.16);
         c->SetRightMargin(0.25);
@@ -117,16 +118,15 @@ int main(int argc, char * argv[]) {
         fieldViewXY.SetComponent(fm);
         fieldViewXY.SetNumberOfContours(100);
         fieldViewXY.SetPlane(0, 0, -1, 0, 0, z);
+        fieldViewXY.SetElectricFieldRange(-10, 25000);
         fieldViewXY.Plot("emag", "colz");
-        c->Print(Form("Plots/E_xy/E_xy_%f.2.png",z));
+        c->SetTitle(Form("z = %0.2f cm", z));
+        c->Print(Form("Plots/E_xy/E_xy_%0.2f.png",z));
         delete c;
     }
 
 
     // Choose whether to open the app or not
-    app.Run(true);
+    // app.Run(true);
 
 }
-
-
-

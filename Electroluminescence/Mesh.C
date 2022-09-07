@@ -130,6 +130,18 @@ int main(int argc, char * argv[]) {
         plotmaps = false;
 
     }
+
+    std::string gridfile;
+    std::string datafile;
+
+    if (!rotate){
+        gridfile = "Aligned_Mesh.mphtxt";
+        datafile = "Aligned_Mesh_Data";
+    }
+    else {
+        gridfile = "Rotated_Mesh.mphtxt";
+        datafile = "Rotated_Mesh_Data";
+    }
     
 
     // ----- 
@@ -143,7 +155,7 @@ int main(int argc, char * argv[]) {
     
     // Setup the electric potential map
     ComponentComsol* fm = new ComponentComsol(); // Field Map
-    fm->Initialise(home + "Aligned_Mesh.mphtxt",home + "Mesh_MaterialProperties.txt", home + "Aligned_Mesh_Data", "mm");
+    fm->Initialise(home + gridfile ,home + "Mesh_MaterialProperties.txt", home + datafile, "mm");
     
     // Print some information about the cell dimensions.
     fm->PrintRange();
