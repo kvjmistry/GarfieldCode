@@ -11,7 +11,7 @@ start=`date +%s`
 
 # Set the configurable variables
 JOBNAME="Mesh"
-TYPE="Rotated"
+TYPE="Shifted"
 N_EVENTS=20
 
 # Create the directory
@@ -30,7 +30,7 @@ echo "The seed number is: ${SEED}" 2>&1 | tee -a log_nexus_"${SLURM_ARRAY_TASK_I
 # NEXUS
 echo "Running Garfield" 2>&1 | tee -a log_nexus_"${SLURM_ARRAY_TASK_ID}".txt
 # evt id, num e-, seed, grid, jobid, mode [0 = aligned, 1 = rotated, 2 = shifted]
-/n/home05/kvjmistry/packages/GarfieldCode/Electroluminescence/build/Mesh ${SEED} ${N_EVENTS} ${SEED} 1 ${SLURM_ARRAY_TASK_ID} 1 2>&1 | tee -a log_nexus_"${SLURM_ARRAY_TASK_ID}".txt
+/n/home05/kvjmistry/packages/GarfieldCode/Electroluminescence/build/Mesh ${SEED} ${N_EVENTS} ${SEED} 1 ${SLURM_ARRAY_TASK_ID} 2 2>&1 | tee -a log_nexus_"${SLURM_ARRAY_TASK_ID}".txt
 
 echo; echo; echo;
 
