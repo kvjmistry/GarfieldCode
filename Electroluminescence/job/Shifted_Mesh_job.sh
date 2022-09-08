@@ -29,8 +29,8 @@ echo "The seed number is: ${SEED}" 2>&1 | tee -a log_nexus_"${SLURM_ARRAY_TASK_I
 
 # NEXUS
 echo "Running Garfield" 2>&1 | tee -a log_nexus_"${SLURM_ARRAY_TASK_ID}".txt
-# evt id, num e-, seed, grid, jobid, mode [0 = aligned, 1 = rotated, 2 = shifted]
-/n/home05/kvjmistry/packages/GarfieldCode/Electroluminescence/build/Mesh ${SEED} ${N_EVENTS} ${SEED} 1 ${SLURM_ARRAY_TASK_ID} 2 2>&1 | tee -a log_nexus_"${SLURM_ARRAY_TASK_ID}".txt
+# evt id, num e-, seed, grid, jobid, mode [align, rot, shift]
+/n/home05/kvjmistry/packages/GarfieldCode/Electroluminescence/build/Mesh ${SEED} ${N_EVENTS} ${SEED} 1 ${SLURM_ARRAY_TASK_ID} shift 2>&1 | tee -a log_nexus_"${SLURM_ARRAY_TASK_ID}".txt
 
 echo; echo; echo;
 

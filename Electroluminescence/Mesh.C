@@ -26,7 +26,7 @@ $ cmake ..
 make;
 
 To run:
-# evt id, num e-, seed, grid, jobid, mode [0 = aligned, 1 = rotated, 2 = shifted]
+# evt id, num e-, seed, grid, jobid, mode [align, rot, shift]
 ./build/Mesh 0 1 1 0 0 0
 */
 
@@ -87,7 +87,7 @@ int main(int argc, char * argv[]) {
     std::cout << "The seed number is: " << argv[3] << std::endl;
     std::cout << "Using the grid? " << argv[4] << std::endl;
     std::cout << "JobID " << argv[5] << std::endl;
-    std::cout << "Rotate the Mesh? " << argv[6] << std::endl;
+    std::cout << "Mode of simulation?: " << argv[6] << std::endl;
     std::cout << "\n" << std::endl;
 
     // Set the event number
@@ -124,9 +124,6 @@ int main(int argc, char * argv[]) {
     // Job id
     char *jobid = argv[5];
 
-    // Rotate the mesh
-    int mode = std::stoi(argv[6]);
-
     // File Home
     std::string home;
     bool terminate;
@@ -146,17 +143,21 @@ int main(int argc, char * argv[]) {
     std::string datafile;
     std::string filehome;
 
-    if (mode == 0){
+    if (strcmp(argv[6], "align") == 0){
         gridfile = "Aligned/Aligned_Mesh.mphtxt";
         datafile = "Aligned/Aligned_Mesh_Data";
     }
-    else if (mode == 1) {
+    else if (strcmp(argv[6], "rot") == 0) {
         gridfile = "Rotated/Rotated_Mesh.mphtxt";
         datafile = "Rotated/Rotated_Mesh_Data";
     }
-    else if (mode == 2){
+    else if (strcmp(argv[6], "shift") == 0){
+        std::cout << "Shifted" << std::endl;
         gridfile = "Shifted/Shifted_Mesh.mphtxt";
         datafile = "Shifted/Shifted_Mesh_Data";
+    }
+    else {
+        std::cout << "Could not read in the mode!" << std::endl;
     }
     
 
@@ -293,11 +294,11 @@ int main(int argc, char * argv[]) {
 
         std::cout << "Number of electrons produced in avalanche: " << np << std::endl;
         
+        double x1, y1, z1, t1, e1;
+        double x2, y2, z2, t2, e2;
         // Loop over the electrons produced [should be only one!]
         for (int ie = 0; ie < np; ie++) {
             
-            double x1, y1, z1, t1, e1;
-            double x2, y2, z2, t2, e2;
             int status;
             aval.GetElectronEndpoint(ie, x1, y1, z1, t1, e1, x2, y2, z2, t2, e2, status);
 
