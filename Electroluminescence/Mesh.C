@@ -26,7 +26,7 @@ $ cmake ..
 make;
 
 To run:
-# evt id, num e-, seed, grid, jobid, rotated
+# evt id, num e-, seed, grid, jobid, mode [0 = aligned, 1 = rotated, 2 = shifted]
 ./build/Mesh 0 1 1 0 0 0
 */
 
@@ -125,7 +125,7 @@ int main(int argc, char * argv[]) {
     char *jobid = argv[5];
 
     // Rotate the mesh
-    bool rotate = argv[6];
+    int mode = std::stoi(argv[6]);
 
     // File Home
     std::string home;
@@ -144,14 +144,19 @@ int main(int argc, char * argv[]) {
 
     std::string gridfile;
     std::string datafile;
+    std::string filehome;
 
-    if (!rotate){
-        gridfile = "Aligned_Mesh.mphtxt";
-        datafile = "Aligned_Mesh_Data";
+    if (mode == 0){
+        gridfile = "Aligned/Aligned_Mesh.mphtxt";
+        datafile = "Aligned/Aligned_Mesh_Data";
     }
-    else {
-        gridfile = "Rotated_Mesh.mphtxt";
-        datafile = "Rotated_Mesh_Data";
+    else if (mode == 1) {
+        gridfile = "Rotated/Rotated_Mesh.mphtxt";
+        datafile = "Rotated/Rotated_Mesh_Data";
+    }
+    else if (mode == 2){
+        gridfile = "Shifted/Shifted_Mesh.mphtxt";
+        datafile = "Shifted/Shifted_Mesh_Data";
     }
     
 
@@ -351,7 +356,9 @@ int main(int argc, char * argv[]) {
                            std::to_string(nBottomPlane) + "," + 
                            std::to_string(x0) + "," + 
                            std::to_string(y0) + "," + 
-                           std::to_string(z0));
+                           std::to_string(z0) + "," + 
+                           std::to_string(e1) + "," + 
+                           std::to_string(e2));
     
     }
 
@@ -382,7 +389,7 @@ int main(int argc, char * argv[]) {
     // Initialize the csv file
     metafile.open(Form("Metadata_%s.csv", jobid));
 
-    // metafile << "event,electrons,ions,elastic,ionisations,attachment,inelastic,excitation,top,bottom,start x,start y,start z"<< "\n";
+    // metafile << "event,electrons,ions,elastic,ionisations,attachment,inelastic,excitation,top,bottom,start x,start y,start z, start E, end E"<< "\n";
     
     for (unsigned int i = 0; i < metadata.size(); i++){
         std::cout << metadata.at(i)<< "\n";
