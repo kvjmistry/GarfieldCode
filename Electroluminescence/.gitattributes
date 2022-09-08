@@ -1,0 +1,10 @@
+Files/Aligned/Aligned_Mesh.mphtxt filter=lfs diff=lfs merge=lfs -text
+Files/Aligned/Aligned_Mesh_Data filter=lfs diff=lfs merge=lfs -text
+Files/Aligned/EventInfo_merge.csv filter=lfs diff=lfs merge=lfs -text
+Files/Aligned/Metadata_merge.csv filter=lfs diff=lfs merge=lfs -text
+Files/Rotated/Rotated_Mesh.mphtxt filter=lfs diff=lfs merge=lfs -text
+Files/Rotated/Rotated_Mesh_Data filter=lfs diff=lfs merge=lfs -text
+Files/Rotated/EventInfo_merge.csv filter=lfs diff=lfs merge=lfs -text
+Files/Rotated/Metadata_merge.csv filter=lfs diff=lfs merge=lfs -text
+Files/Shifted/Shifted_Mesh.mphtxt filter=lfs diff=lfs merge=lfs -text
+Files/Shifted/Shifted_Mesh_Data filter=lfs diff=lfs merge=lfs -text
