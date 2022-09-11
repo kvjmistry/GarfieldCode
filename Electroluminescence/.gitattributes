@@ -8,3 +8,11 @@ Files/Rotated/EventInfo_merge.csv filter=lfs diff=lfs merge=lfs -text
 Files/Rotated/Metadata_merge.csv filter=lfs diff=lfs merge=lfs -text
 Files/Shifted/Shifted_Mesh.mphtxt filter=lfs diff=lfs merge=lfs -text
 Files/Shifted/Shifted_Mesh_Data filter=lfs diff=lfs merge=lfs -text
+Files/Rotated/Rotated30_Mesh.mphtxt filter=lfs diff=lfs merge=lfs -text
+Files/Rotated/Rotated30_Mesh_Data filter=lfs diff=lfs merge=lfs -text
+Files/Rotated/Rotated40_Mesh.mphtxt filter=lfs diff=lfs merge=lfs -text
+Files/Rotated/Rotated40_Mesh_Data filter=lfs diff=lfs merge=lfs -text
+Files/Rotated/Rotated10_Mesh.mphtxt filter=lfs diff=lfs merge=lfs -text
+Files/Rotated/Rotated10_Mesh_Data filter=lfs diff=lfs merge=lfs -text
+Files/Rotated/Rotated20_Mesh.mphtxt filter=lfs diff=lfs merge=lfs -text
+Files/Rotated/Rotated20_Mesh_Data filter=lfs diff=lfs merge=lfs -text
