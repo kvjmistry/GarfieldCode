@@ -26,7 +26,7 @@ $ cmake ..
 make;
 
 To run:
-# evt id, num e-, seed, grid, jobid, mode [align, rot, shift]
+# evt id, num e-, seed, grid, jobid, mode [align, rot10, rot20, rot30, rot40, shift]
 ./build/Mesh 0 1 1 0 0 0
 */
 
@@ -147,9 +147,21 @@ int main(int argc, char * argv[]) {
         gridfile = "Aligned/Aligned_Mesh.mphtxt";
         datafile = "Aligned/Aligned_Mesh_Data";
     }
-    else if (strcmp(argv[6], "rot") == 0) {
-        gridfile = "Rotated/Rotated_Mesh.mphtxt";
-        datafile = "Rotated/Rotated_Mesh_Data";
+    else if (strcmp(argv[6], "rot10") == 0) {
+        gridfile = "Rotated/Rotated10_Mesh.mphtxt";
+        datafile = "Rotated/Rotated10_Mesh_Data";
+    }
+    else if (strcmp(argv[6], "rot20") == 0) {
+        gridfile = "Rotated/Rotated20_Mesh.mphtxt";
+        datafile = "Rotated/Rotated20_Mesh_Data";
+    }
+    else if (strcmp(argv[6], "rot30") == 0) {
+        gridfile = "Rotated/Rotated30_Mesh.mphtxt";
+        datafile = "Rotated/Rotated30_Mesh_Data";
+    }
+    else if (strcmp(argv[6], "rot40") == 0) {
+        gridfile = "Rotated/Rotated30_Mesh.mphtxt";
+        datafile = "Rotated/Rotated30_Mesh_Data";
     }
     else if (strcmp(argv[6], "shift") == 0){
         std::cout << "Shifted" << std::endl;
