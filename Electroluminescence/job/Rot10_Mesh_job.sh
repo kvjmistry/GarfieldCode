@@ -3,7 +3,7 @@
 #SBATCH -c 1 # Number of cores
 #SBATCH -p shared # Partition
 #SBATCH --mem 4000 # Memory request (6Gb)
-#SBATCH -t 0-8:00 # Maximum execution time (D-HH:MM)
+#SBATCH -t 0-4:00 # Maximum execution time (D-HH:MM)
 #SBATCH -o Mesh_%A_%a.out # Standard output
 #SBATCH -e Mesh_%A_%a.err # Standard error
 
@@ -31,7 +31,7 @@ echo "The seed number is: ${SEED}" 2>&1 | tee -a log_nexus_"${SLURM_ARRAY_TASK_I
 # NEXUS
 echo "Running Garfield" 2>&1 | tee -a log_nexus_"${SLURM_ARRAY_TASK_ID}".txt
 # evt id, num e-, seed, grid, jobid, mode [align, rot, shift]
-/n/home05/kvjmistry/packages/GarfieldCode/Electroluminescence/build/Mesh ${SEED} ${N_EVENTS} ${SEED} 1 ${SLURM_ARRAY_TASK_ID} rot${rotation} 2>&1 | tee -a log_nexus_"${SLURM_ARRAY_TASK_ID}".txt
+/n/home05/kvjmistry/packages/GarfieldCode/Electroluminescence/build/Mesh ${SEED} ${N_EVENTS} ${SEED} 1 ${SLURM_ARRAY_TASK_ID} rot${ROTATION} 2>&1 | tee -a log_nexus_"${SLURM_ARRAY_TASK_ID}".txt
 
 echo; echo; echo;
 
