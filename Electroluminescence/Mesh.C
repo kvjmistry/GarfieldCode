@@ -142,31 +142,44 @@ int main(int argc, char * argv[]) {
     std::string gridfile;
     std::string datafile;
     std::string filehome;
+    std::string fileconfig;
 
     if (strcmp(argv[6], "align") == 0){
         gridfile = "Aligned/Aligned_Mesh.mphtxt";
         datafile = "Aligned/Aligned_Mesh_Data";
+        fileconfig = "Mesh_MaterialProperties.txt";
     }
     else if (strcmp(argv[6], "rot10") == 0) {
         gridfile = "Rotated/Rotated10_Mesh.mphtxt";
         datafile = "Rotated/Rotated10_Mesh_Data";
+        fileconfig = "Mesh_MaterialProperties.txt";
     }
     else if (strcmp(argv[6], "rot20") == 0) {
         gridfile = "Rotated/Rotated20_Mesh.mphtxt";
         datafile = "Rotated/Rotated20_Mesh_Data";
+        fileconfig = "Mesh_MaterialProperties.txt";
     }
     else if (strcmp(argv[6], "rot30") == 0) {
         gridfile = "Rotated/Rotated30_Mesh.mphtxt";
         datafile = "Rotated/Rotated30_Mesh_Data";
+        fileconfig = "Mesh_MaterialProperties.txt";
     }
     else if (strcmp(argv[6], "rot40") == 0) {
         gridfile = "Rotated/Rotated30_Mesh.mphtxt";
         datafile = "Rotated/Rotated30_Mesh_Data";
+        fileconfig = "Mesh_MaterialProperties.txt";
     }
     else if (strcmp(argv[6], "shift") == 0){
         std::cout << "Shifted" << std::endl;
         gridfile = "Shifted/Shifted_Mesh.mphtxt";
         datafile = "Shifted/Shifted_Mesh_Data";
+        fileconfig = "Mesh_MaterialProperties.txt";
+    }
+    else if (strcmp(argv[6], "disk") == 0){
+        std::cout << "Disk" << std::endl;
+        gridfile = "Disk/Disk_Mesh.mphtxt";
+        datafile = "Disk/Disk_Mesh_Data";
+        fileconfig = "Mesh_MaterialPropertiesDisk.txt";
     }
     else {
         std::cout << "Could not read in the mode!" << std::endl;
@@ -184,7 +197,7 @@ int main(int argc, char * argv[]) {
     
     // Setup the electric potential map
     ComponentComsol* fm = new ComponentComsol(); // Field Map
-    fm->Initialise(home + gridfile ,home + "Mesh_MaterialProperties.txt", home + datafile, "mm");
+    fm->Initialise(home + gridfile ,home + fileconfig, home + datafile, "mm");
     
     // Print some information about the cell dimensions.
     fm->PrintRange();
