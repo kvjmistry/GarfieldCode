@@ -10,3 +10,7 @@ target_link_libraries(Mesh Garfield::Garfield)
 
 add_executable(PlotEField PlotEField.C)
 target_link_libraries(PlotEField Garfield::Garfield)
+
+
+add_executable(TrackSim TrackSim.C)
+target_link_libraries(TrackSim Garfield::Garfield)
