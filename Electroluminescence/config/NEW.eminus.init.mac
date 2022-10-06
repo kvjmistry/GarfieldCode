@@ -33,5 +33,4 @@
 /nexus/RegisterTrackingAction DefaultTrackingAction
 
 ### CONFIGURATION
-/nexus/RegisterDelayedMacro macros/physics/Xe137.mac
-/nexus/RegisterMacro macros/NEW.eminus.config.mac
+/nexus/RegisterMacro NEW.eminus.config.mac
