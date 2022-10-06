@@ -1,0 +1,42 @@
+## ----------------------------------------------------------------------------
+## nexus | NEXT100.Neutron.config.mac
+##
+## Configuration macro to simulate neutrons from all around the lead shielding
+## in the NEXT-100 detector.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
+##### VERBOSITY #####
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+/process/em/verbose 0
+/process/had/verbose 0
+
+##### JOB CONTROL #####
+/nexus/random_seed -1
+
+##### GEOMETRY #####
+/Geometry/NextNew/pressure 13.5 bar
+/Geometry/NextNew/elfield false
+
+##### GENERATOR #####
+# Neutron generator for cosmogenics
+/Generator/SingleParticle/particle e-
+/Generator/SingleParticle/min_energy 2.458 MeV
+/Generator/SingleParticle/max_energy 2.458 MeV
+#/Generator/SingleParticle/region CENTER
+/Generator/SingleParticle/region ACTIVE
+
+##### PHYSICS #####
+## No full simulation
+/PhysicsList/Nexus/clustering          false
+/PhysicsList/Nexus/drift               false
+/PhysicsList/Nexus/electroluminescence false
+
+##### PERSISTENCY #####
+/nexus/persistency/eventType background
+ /nexus/persistency/outputFile NEW.eminus.next
+#/nexus/persistency/outputFile NEW.eminus_40keV.next

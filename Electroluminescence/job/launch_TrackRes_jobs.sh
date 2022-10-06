@@ -6,7 +6,7 @@ declare -a RotArray=("Aligned" "Shifted")
 # Iterate the string array using for loop
 for i in ${!RotArray[@]}; do
    ROT=${RotArray[$i]}
-   echo "Making jobscripts for Kr ROT: $ROT"
+   echo "Making jobscripts for Mode ROT: $ROT"
    mkdir -p TrackRes_$ROT
    cd  TrackRes_$ROT
    cp ../CalcTrackRes_job.sh .
