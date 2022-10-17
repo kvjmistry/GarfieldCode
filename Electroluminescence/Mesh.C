@@ -149,6 +149,17 @@ int main(int argc, char * argv[]) {
         datafile = "Aligned/Aligned_Mesh_Data";
         fileconfig = "Mesh_MaterialProperties.txt";
     }
+    // This is the rotated mesh with the full unit cell
+    else if (strcmp(argv[6], "rot30") == 0) {
+        gridfile = "Rotated/Rotated_Mesh.mphtxt";
+        datafile = "Rotated/Rotated_Mesh_Data";
+        fileconfig = "Mesh_MaterialPropertiesRotated.txt";
+
+        // Modify the mesh boundary to a larger value
+        MeshBoundary = 2.07; // cm
+        MeshSampleR  = 2.069; // cm
+
+    }
     else if (strcmp(argv[6], "rot10") == 0) {
         gridfile = "Rotated/Rotated10_Mesh.mphtxt";
         datafile = "Rotated/Rotated10_Mesh_Data";
@@ -159,11 +170,11 @@ int main(int argc, char * argv[]) {
         datafile = "Rotated/Rotated20_Mesh_Data";
         fileconfig = "Mesh_MaterialProperties.txt";
     }
-    else if (strcmp(argv[6], "rot30") == 0) {
-        gridfile = "Rotated/Rotated30_Mesh.mphtxt";
-        datafile = "Rotated/Rotated30_Mesh_Data";
-        fileconfig = "Mesh_MaterialProperties.txt";
-    }
+    // else if (strcmp(argv[6], "rot30") == 0) {
+    //     gridfile = "Rotated/Rotated30_Mesh.mphtxt";
+    //     datafile = "Rotated/Rotated30_Mesh_Data";
+    //     fileconfig = "Mesh_MaterialProperties.txt";
+    // }
     else if (strcmp(argv[6], "rot40") == 0) {
         gridfile = "Rotated/Rotated30_Mesh.mphtxt";
         datafile = "Rotated/Rotated30_Mesh_Data";
@@ -236,11 +247,11 @@ int main(int argc, char * argv[]) {
         TCanvas* cf3 = new TCanvas("cf3", "", 600, 600);
         cf3->SetLeftMargin(0.16);
         cf3->SetRightMargin(0.25);
-        fieldViewXZ.SetArea(-0.7, -0.8, 0.7, 0.7); 
+        // fieldViewXZ.SetArea(-0.7, -0.8, 0.7, 0.7); 
         fieldViewXZ.SetCanvas(cf3);
         fieldViewXZ.SetComponent(fm);
         fieldViewXZ.SetNumberOfContours(100);
-        fieldViewXZ.SetPlane(0, 0, -1, 0, 0, -0.51);
+        fieldViewXZ.SetPlane(0, 0, 1, 0, 0, -0.51);
         fieldViewXZ.Plot("emag", "colz");
     }
 
