@@ -14,7 +14,7 @@ start=`date +%s`
 JOBNAME="TrackResKr"
 Mode="Aligned"
 FILES_PER_JOB=1
-N_EVENTS=1000
+N_EVENTS=10000
 CONFIG=NEW.eminus_40keV.config.mac
 INIT=NEW.eminus_40keV.init.mac
 
