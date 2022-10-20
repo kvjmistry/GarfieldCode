@@ -1,8 +1,9 @@
 #!/bin/bash
 
-JOB=Aligned
+# JOB=Aligned
 #JOB=Rotated
 #JOB=Shifted
+JOB=Rot30
 
 mkdir $JOB
 cd $JOB

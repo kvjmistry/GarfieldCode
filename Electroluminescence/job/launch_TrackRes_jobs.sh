@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # Declare an array of string with type, these are the EL drift vel values to run
-declare -a RotArray=("Aligned" "Shifted")
+# declare -a RotArray=("Aligned" "Shifted")
+declare -a RotArray=("Rot30")
 
 # Iterate the string array using for loop
 for i in ${!RotArray[@]}; do

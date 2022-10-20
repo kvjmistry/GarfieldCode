@@ -3,7 +3,7 @@
 #SBATCH -c 1 # Number of cores
 #SBATCH -p shared # Partition
 #SBATCH --mem 4000 # Memory request (6Gb)
-#SBATCH -t 0-5:00 # Maximum execution time (D-HH:MM)
+#SBATCH -t 0-6:00 # Maximum execution time (D-HH:MM)
 #SBATCH -o Mesh_%A_%a.out # Standard output
 #SBATCH -e Mesh_%A_%a.err # Standard error
 
