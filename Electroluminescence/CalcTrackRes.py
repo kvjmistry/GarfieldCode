@@ -127,7 +127,11 @@ print(hits["ni"].sum())
 hits = hits[hits["ni"] != 0]
 
 # Drop the energy and z columns
-hits = hits.drop(columns = ["z", "energy"])
+hits = hits.drop(columns = ["energy"])
+
+# Get the average z position of the event
+hits['z_mean'] = hits.groupby(["event_id"])["z"].transform('mean')
+hits = hits.drop(columns = ["z"])
 
 print(len(hits.event_id.unique()))
 
@@ -139,8 +143,9 @@ evid = -1
 Yieldsum = 0
 
 Yields = []
+z_avg = []
 
-for ev,x,y,ni,sigma in zip(hits["event_id"], hits["x"], hits["y"], hits["ni"], hits["sigma"]):
+for ev,x,y,ni,sigma,z in zip(hits["event_id"], hits["x"], hits["y"], hits["ni"], hits["sigma"], hits["z_mean"]):
 
     temp_df = pd.DataFrame()
 
@@ -149,6 +154,7 @@ for ev,x,y,ni,sigma in zip(hits["event_id"], hits["x"], hits["y"], hits["ni"], h
         if (Yieldsum != 0):
             print("Yield: ",Yieldsum)
             Yields.append(Yieldsum)
+            z_avg.append(z)
 
         Yieldsum = 0
         evid = ev
@@ -172,6 +178,7 @@ for ev,x,y,ni,sigma in zip(hits["event_id"], hits["x"], hits["y"], hits["ni"], h
 
 Outdf = pd.DataFrame()
 Outdf["Yield"] = Yields
+Outdf["z"] = z_avg
 
 Outdf.to_hdf("Yields.h5", "Yields", mode = "w")
 
