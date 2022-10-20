@@ -3,7 +3,9 @@ import pandas as pd
 import sys
 
 Mode = sys.argv[1]
+option = sys.argv[2]
 print("Using mode: ", Mode)
+print("with Option: ", option)
 
 # Transform x, y positions to unit cell positions
 hexsize = (1.25+0.127/2.0)/(np.cos(30*np.pi/180))
@@ -95,11 +97,12 @@ hitsum = hitsum.drop(columns = ["energy"])
 hitsum = hitsum.drop_duplicates()
 
 
-# Get a list of events who do not deposit all their energy in the detector
-bad_events = hitsum[hitsum["Esum"] != 2.458].event_id.values
+if (option == "bb"):
+    # Get a list of events who do not deposit all their energy in the detector
+    bad_events = hitsum[hitsum["Esum"] != 2.458].event_id.values
 
-# Filter the main hit list from the bad events
-hits = hits[~hits.event_id.isin(bad_events)]
+    # Filter the main hit list from the bad events
+    hits = hits[~hits.event_id.isin(bad_events)]
 
 # Change the units of energy to eV
 hits["energy"] = hits["energy"]*1e6

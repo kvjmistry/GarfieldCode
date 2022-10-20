@@ -13,6 +13,7 @@ start=`date +%s`
 # Set the configurable variables
 JOBNAME="TrackRes"
 Mode="Aligned"
+Option="bb"
 FILES_PER_JOB=1
 N_EVENTS=1000
 CONFIG=NEW.eminus.config.mac
@@ -46,7 +47,7 @@ for i in $(eval echo "{1..${FILES_PER_JOB}}"); do
     nexus -n $N_EVENTS ${INIT} 2>&1 | tee -a log_nexus_"${SLURM_ARRAY_TASK_ID}".txt
 
     # Now run the Track resolution script
-    python CalcTrackRes.py $Mode | tee -a log_nexus_"${SLURM_ARRAY_TASK_ID}".txt
+    python CalcTrackRes.py $Mode $Option | tee -a log_nexus_"${SLURM_ARRAY_TASK_ID}".txt
 
     echo; echo; echo;
 done
