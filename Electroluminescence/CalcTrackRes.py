@@ -8,6 +8,10 @@ print("Using mode: ", Mode)
 # Transform x, y positions to unit cell positions
 hexsize = (1.25+0.127/2.0)/(np.cos(30*np.pi/180))
 
+# The hexagon size is larger for the rotated mesh
+if (Mode == "Rot30"):
+    hexsize = 24.446 # mm
+
 # Define bins in q and r space
 numbins = 50
 
