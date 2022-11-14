@@ -75,8 +75,8 @@ def GetHexCoords(df):
     df['r'] = pd.cut(x=df['r'], bins=bins_r,labels=bins_centre_r, include_lowest=True)
     return df
 
-if (sample_type == "unitcell"): unitcell = pd.read_hdf(f"../Maps/unitcell_{Mode}.h5","Yields")
-if (sample_type == "dist"): unitcell = pd.read_hdf(f"../Maps/dist_unitcell_{Mode}.h5","Yields")
+if (sample_type == "unitcell"): unitcell = pd.read_hdf(f"unitcell_{Mode}.h5","Yields")
+if (sample_type == "dist"): unitcell = pd.read_hdf(f"dist_unitcell_{Mode}.h5","Yields")
 
 # unitcell = pd.read_hdf(f"unitcell_{Mode}.h5","Yields")
 
