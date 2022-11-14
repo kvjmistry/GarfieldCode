@@ -4,8 +4,13 @@ import sys
 
 Mode = sys.argv[1]
 option = sys.argv[2]
+
+# sample_type = "unitcell"
+sample_type = "dist"
+
 print("Using mode: ", Mode)
 print("with Option: ", option)
+print("Sampling with: ", sample_type)
 
 # Transform x, y positions to unit cell positions
 hexsize = (1.25+0.127/2.0)/(np.cos(30*np.pi/180))
@@ -70,8 +75,10 @@ def GetHexCoords(df):
     df['r'] = pd.cut(x=df['r'], bins=bins_r,labels=bins_centre_r, include_lowest=True)
     return df
 
+if (sample_type == "unitcell"): unitcell = pd.read_hdf(f"../Maps/unitcell_{Mode}.h5","Yields")
+if (sample_type == "dist"): unitcell = pd.read_hdf(f"../Maps/dist_unitcell_{Mode}.h5","Yields")
 
-unitcell = pd.read_hdf(f"unitcell_{Mode}.h5","Yields")
+# unitcell = pd.read_hdf(f"unitcell_{Mode}.h5","Yields")
 
 unitcell = unitcell.drop(columns = ["x", "y"])
 unitcell['q'] = unitcell['q'].astype(float)
@@ -176,7 +183,27 @@ for ev,x,y,ni,sigma,z in zip(hits["event_id"], hits["x"], hits["y"], hits["ni"],
     # Transform the sampled x,y position to a binned q,r position in the hexagon unit cell
     temp_df = GetHexCoords(temp_df)
     
-    Yieldsum += pd.merge(temp_df, unitcell, how ='inner', on =['q', 'r']).excitation.sum()
+    # Choose the sample type
+    if (sample_type == "unitcell"):
+        Yieldsum += pd.merge(temp_df, unitcell, how ='inner', on =['q', 'r']).excitation.sum()
+    else:
+
+        # Use distribution method:
+
+        # Loop over the temp df
+        for temp_q, temp_r in zip(temp_df["q"], temp_df["r"]):
+
+            # Get part of the unitcell df for a given q and r
+            query = unitcell[(unitcell["q"] == temp_q) & (unitcell["r"] == temp_r)]
+
+            bin_width = 20
+            bin_centers =  np.arange(810, 1390, bin_width)
+            hist, edges = np.histogram(query.excitation.values, bins = np.arange(800, 1400, bin_width), density=True)
+            hist = hist*bin_width
+
+            # Sample the distribution
+            sample = rng.choice(bin_centers, p = hist)
+            Yieldsum += sample
 
 
 Outdf = pd.DataFrame()
