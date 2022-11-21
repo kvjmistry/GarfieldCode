@@ -113,7 +113,7 @@ int main(int argc, char * argv[]) {
     double pressure = 13.5*torr; // Give pressure in bar and convert it to torr
 
     // Start Z
-    double z0 = 0.65; //cm
+    double z0 = 0.85; //cm
 
     // SEED
     int seed = std::stoi(argv[3]);
@@ -148,6 +148,11 @@ int main(int argc, char * argv[]) {
         gridfile = "Aligned/Aligned_Mesh.mphtxt";
         datafile = "Aligned/Aligned_Mesh_Data";
         fileconfig = "Mesh_MaterialProperties.txt";
+    }
+    else if (strcmp(argv[6], "alignv2") == 0){
+        gridfile = "Aligned/Aligned_Mesh_Data_Rings.mphtxt";
+        datafile = "Aligned/Aligned_Mesh_Data_Rings.txt";
+        fileconfig = "Mesh_MaterialPropertiesRings.txt";
     }
     // This is the rotated mesh with the full unit cell
     else if (strcmp(argv[6], "rot30") == 0) {
