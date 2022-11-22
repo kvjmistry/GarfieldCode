@@ -145,24 +145,25 @@ int main(int argc, char * argv[]) {
     std::string fileconfig;
 
     if (strcmp(argv[6], "align") == 0){
-        gridfile = "Aligned/Aligned_Mesh.mphtxt";
-        datafile = "Aligned/Aligned_Mesh_Data";
-        fileconfig = "Mesh_MaterialProperties.txt";
-    }
-    else if (strcmp(argv[6], "alignv2") == 0){
+        // gridfile = "Aligned/Aligned_Mesh.mphtxt";
+        // datafile = "Aligned/Aligned_Mesh_Data";
+        // fileconfig = "Mesh_MaterialProperties.txt";
         gridfile = "Aligned/Aligned_Mesh_Data_Rings.mphtxt";
         datafile = "Aligned/Aligned_Mesh_Data_Rings.txt";
         fileconfig = "Mesh_MaterialPropertiesRings.txt";
     }
     // This is the rotated mesh with the full unit cell
     else if (strcmp(argv[6], "rot30") == 0) {
-        gridfile = "Rotated/Rotated_Mesh.mphtxt";
-        datafile = "Rotated/Rotated_Mesh_Data";
-        fileconfig = "Mesh_MaterialPropertiesRotated.txt";
+        // gridfile = "Rotated/Rotated_Mesh.mphtxt";
+        // datafile = "Rotated/Rotated_Mesh_Data";
+        // fileconfig = "Mesh_MaterialPropertiesRotated.txt";
+        gridfile = "Rotated/Rotated_Mesh_Data_Rings.mphtxt";
+        datafile = "Rotated/Rotated_Mesh_Data_Rings.txt";
+        fileconfig = "Mesh_MaterialPropertiesRings.txt";
 
         // Modify the mesh boundary to a larger value
-        MeshBoundary = 2.07; // cm
-        MeshSampleR  = 2.069; // cm
+        MeshBoundary = 1.6; // cm
+        MeshSampleR  = 1.6; // cm
 
     }
     else if (strcmp(argv[6], "rot10") == 0) {
@@ -187,15 +188,21 @@ int main(int argc, char * argv[]) {
     }
     else if (strcmp(argv[6], "shift") == 0){
         std::cout << "Shifted" << std::endl;
-        gridfile = "Shifted/Shifted_Mesh.mphtxt";
-        datafile = "Shifted/Shifted_Mesh_Data";
-        fileconfig = "Mesh_MaterialProperties.txt";
+        // gridfile = "Shifted/Shifted_Mesh.mphtxt";
+        // datafile = "Shifted/Shifted_Mesh_Data";
+        // fileconfig = "Mesh_MaterialProperties.txt";
+        gridfile = "Shifted/Shifted_Mesh_Data_Rings.mphtxt";
+        datafile = "Shifted/Shifted_Mesh_Data_Rings.txt";
+        fileconfig = "Mesh_MaterialPropertiesRings.txt";
     }
     else if (strcmp(argv[6], "disk") == 0){
         std::cout << "Disk" << std::endl;
-        gridfile = "Disk/Disk_Mesh.mphtxt";
-        datafile = "Disk/Disk_Mesh_Data";
-        fileconfig = "Mesh_MaterialPropertiesDisk.txt";
+        // gridfile = "Disk/Disk_Mesh.mphtxt";
+        // datafile = "Disk/Disk_Mesh_Data";
+        // fileconfig = "Mesh_MaterialPropertiesDisk.txt";
+        gridfile = "Disk/Disk_Mesh_Data_Rings.mphtxt";
+        datafile = "Disk/Disk_Mesh_Data_Rings.txt";
+        fileconfig = "Mesh_MaterialPropertiesRingsDisk.txt";
     }
     else {
         std::cout << "Could not read in the mode!" << std::endl;
@@ -300,7 +307,7 @@ int main(int argc, char * argv[]) {
         double y0 = rng.Uniform(-1*MeshBoundary, MeshBoundary);
 
         while(sample_pos){
-            if (std::sqrt(x0*x0 + y0*y0) < MeshSampleR){
+            if (std::sqrt(x0*x0 + y0*y0) <= MeshSampleR){
                 std::cout << "Sampled position is valid!" << std::endl;
                 sample_pos = false;
             }
