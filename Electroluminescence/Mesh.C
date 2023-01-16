@@ -217,6 +217,12 @@ int main(int argc, char * argv[]) {
     gas.SetTemperature(temperature);
     gas.SetPressure(pressure);
     gas.Initialise(true);  
+    gas.PrintGas();
+
+    // Turn this on to generate the magboltz table
+    // gas.GenerateGasTable(10);
+    // gas.WriteGasFile("xe.gas"); // Save the table. 
+
     
     // Setup the electric potential map
     ComponentComsol* fm = new ComponentComsol(); // Field Map

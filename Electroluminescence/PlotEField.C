@@ -95,7 +95,7 @@ int main(int argc, char * argv[]) {
     
     // Setup the electric potential map
     ComponentComsol* fm = new ComponentComsol(); // Field Map
-    fm->Initialise(home + "Aligned_Mesh.mphtxt",home + "Mesh_MaterialProperties.txt", home + "Aligned_Mesh_Data", "mm");
+    fm->Initialise(home + "Disk/Disk_Mesh.mphtxt",home + "Mesh_MaterialPropertiesDisk.txt", home + "Disk/Disk_Mesh_Data", "mm");
     
     // Print some information about the cell dimensions.
     fm->PrintRange();
@@ -108,6 +108,7 @@ int main(int argc, char * argv[]) {
     // Plot the fieldmaps
     ViewField fieldViewXY;
 
+    int index = 1;
     for (double z = 0.8; z>=-0.8;z-=0.01){
         // std::cout << z<< std::endl;
         TCanvas* c = new TCanvas("c", "", 600, 600);
@@ -121,7 +122,8 @@ int main(int argc, char * argv[]) {
         fieldViewXY.SetElectricFieldRange(-10, 25000);
         fieldViewXY.Plot("emag", "colz");
         c->SetTitle(Form("z = %0.2f cm", z));
-        c->Print(Form("Plots/E_xy/E_xy_%0.2f.png",z));
+        c->Print(Form("Plots/E_xy/%i_E_xy_%0.2f.png",index, z));
+        index++;
         delete c;
     }
 
