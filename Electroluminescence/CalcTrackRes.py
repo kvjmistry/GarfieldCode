@@ -16,7 +16,7 @@ print("Sampling with: ", sample_type)
 hexsize = (1.25+0.127/2.0)/(np.cos(30*np.pi/180))
 
 # The hexagon size is larger for the rotated mesh
-if (Mode == "Rot30"):
+if (Mode == "Rot30v2"):
     hexsize = 15 # mm
 
 # Define bins in q and r space

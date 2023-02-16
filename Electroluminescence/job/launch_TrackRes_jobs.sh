@@ -5,7 +5,7 @@ Option="Kr"
 SCRIPT=CalcTrackRes${Option}_job.sh
 
 # Declare an array of string with type, these are the EL drift vel values to run
-declare -a RotArray=("Aligned" "Shifted" "Rot30")
+declare -a RotArray=("Alignedv2" "Shiftedv2" "Rot30v2")
 
 # Iterate the string array using for loop
 for i in ${!RotArray[@]}; do
