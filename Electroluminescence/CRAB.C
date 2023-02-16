@@ -27,7 +27,7 @@ make;
 
 To run:
 # evt id, num e-, seed, grid, jobid
-./build/CRAB 0 1 1 0
+./build/CRAB 0 1 1 0 0
 */
 
 
@@ -85,7 +85,8 @@ int main(int argc, char * argv[]) {
     std::cout << "The event number is: " << argv[1] << std::endl;
     std::cout << "Simulating a total of " << argv[2] << " electrons" << std::endl;
     std::cout << "The seed number is: " << argv[3] << std::endl;
-    std::cout << "JobID " << argv[4] << std::endl;
+    std::cout << "Using the grid? " << argv[4] << std::endl;
+    std::cout << "JobID " << argv[5] << std::endl;
     std::cout << "\n" << std::endl;
 
     // Set the event number
@@ -107,22 +108,37 @@ int main(int argc, char * argv[]) {
     double torr = 750.062;
     double pressure = 9.7*torr; // Give pressure in bar and convert it to torr
 
+    // Mesh Boundary Zone
+    double MeshBoundary = 1; // cm
+    double MeshSampleR = 0.45; // cm -- Circle radius to sample within
+
     // Start Z -- at the top of the EL ring
     double z0 = -9.3; //cm
 
     // SEED
     int seed = std::stoi(argv[3]);
 
+    // Choose to run on the grid or not
+    int usegrid = std::stoi(argv[4]);
+
     // Job id
-    char *jobid = argv[4];
+    char *jobid = argv[5];
 
     // File Home
     std::string home;
     bool terminate;
-    
-    home = "/Users/mistryk2/OneDrive - University of Texas at Arlington/Projects/CRAB/COMSOL/";
-    terminate = false;
 
+    if (usegrid == 0){
+        home= "/Users/mistryk2/OneDrive - University of Texas at Arlington/Projects/CRAB/COMSOL/";
+        terminate = false;
+    }
+    else {
+        home = "/n/home05/kvjmistry/packages/GarfieldCode/Electroluminescence/Files/";
+        terminate = true;
+        plotmaps = false;
+
+    }
+    
     std::string gridfile   = "CRAB_Mesh.mphtxt";
     std::string datafile   = "CRAB_Data.txt";
     std::string fileconfig = "CRABMaterialProperties.txt";
@@ -196,33 +212,33 @@ int main(int argc, char * argv[]) {
     // Crate the sensor
     Sensor sensor;
     sensor.AddComponent(fm);
-    sensor.SetArea();
+    sensor.SetArea(-MeshBoundary, -MeshBoundary, -9, MeshBoundary, MeshBoundary,  -12);
 
     // Make a microscopic tracking class for electron transport.
     AvalancheMicroscopic aval;
-    // aval.SetSensor(&sensor);
+    aval.SetSensor(&sensor);
    
     // Make a histogram of the electron energy distribution.
     TH1D hEn("hEn","energy distribution", 1000, 0., 100.);
-    // aval.EnableElectronEnergyHistogramming(&hEn);
+    aval.EnableElectronEnergyHistogramming(&hEn);
 
     // Initialise object to plot the drift paths
     ViewDrift driftView;
-    // aval.EnablePlotting(&driftView);
+    aval.EnablePlotting(&driftView);
 
     // Enable handle to retrieve all the inelastic (VUV gamma production) collisions
-    // aval.SetUserHandleInelastic(userHandle);
+    aval.SetUserHandleInelastic(userHandle);
 
 
-    AvalancheMC fAvalancheMC; // drift, not avalanche, to be fair.
-	fAvalancheMC.SetSensor(&sensor);
-	fAvalancheMC.SetTimeSteps(0.05); // nsec, per example
-	fAvalancheMC.SetDistanceSteps(2.e-1); // cm, 10x example
-	fAvalancheMC.EnableDebugging(false); // way too much information. 
-	fAvalancheMC.EnableAttachment();
-    // fAvalancheMC.SetUserHandleInelastic(userHandle);
-    fAvalancheMC.EnablePlotting(&driftView);
-	//    fAvalancheMC->DisableAttachment();
+    // AvalancheMC fAvalancheMC; // drift, not avalanche, to be fair.
+	// fAvalancheMC.SetSensor(&sensor);
+	// fAvalancheMC.SetTimeSteps(0.05); // nsec, per example
+	// fAvalancheMC.SetDistanceSteps(2.e-1); // cm, 10x example
+	// fAvalancheMC.EnableDebugging(false); // way too much information. 
+	// fAvalancheMC.EnableAttachment();
+    // // fAvalancheMC.SetUserHandleInelastic(userHandle);
+    // fAvalancheMC.EnablePlotting(&driftView);
+	// //    fAvalancheMC->DisableAttachment();
 
     
     std::vector<unsigned int> nVUV;
@@ -239,9 +255,22 @@ int main(int argc, char * argv[]) {
         // Release the primary electron near the top mesh.
         bool sample_pos = true;
 
-        double x0 = 0.;
-        double y0 = 0.;
+        double x0 = rng.Uniform(-1*MeshBoundary, MeshBoundary);
+        double y0 = rng.Uniform(-1*MeshBoundary, MeshBoundary);
+
+        while(sample_pos){
+            if (std::sqrt(x0*x0 + y0*y0) <= MeshSampleR){
+                std::cout << "Sampled position is valid!" << std::endl;
+                sample_pos = false;
+            }
+            else{
+                x0 = rng.Uniform(-1*MeshBoundary, MeshBoundary);
+                y0 = rng.Uniform(-1*MeshBoundary, MeshBoundary);
+            }
+        }
+        
         const double t0 = 0.;
+        double r = std::sqrt(x0*x0 + y0*y0);
 
         // Draw the initial energy [eV] from the energy distribution.
         const double e0 = i == 0 ? 1. : hEn.GetRandom();
@@ -252,102 +281,85 @@ int main(int argc, char * argv[]) {
                     << ") with an energy of " << e0 << " eV.\n";
         
         // Simulate the avalanche
-        // aval.AvalancheElectron(x0, y0, z0, t0, e0, 0, 0, 0);
-        fAvalancheMC.DriftElectron(x0,y0,z0,t0);
-
-        unsigned int n = fAvalancheMC.GetNumberOfDriftLinePoints();
-        std::cout << "Total drift line points: " << n << std::endl;
-
-        double xi,yi,zi,ti;
-        //	std::cout << "Drift(): avalanchetracking, n DLTs is " << n << std::endl;
-
-        // Get zi when in the beginning of the EL region
-        for(unsigned int i=0;i<n;i++){
-            fAvalancheMC.GetDriftLinePoint(i,xi,yi,zi,ti);
-            //   std::cout << "GVUVPM: positions are " << xi*100<<"," <<yi*100<<","<<zi*100<<"," <<ti<< std::endl;
-
-            // Close to the EL region so avalanche it!
-            // if (yi < 2.5)
-
-
-
-            
-
-	    }  // pts in driftline
+        aval.AvalancheElectron(x0, y0, z0, t0, e0, 0, 0, 0);
         
-        // // Get the number of electrons and ions.
-        // int ne = 0, ni = 0;
-        // aval.GetAvalancheSize(ne, ni);
+        // Get the number of electrons and ions.
+        int ne = 0, ni = 0;
+        aval.GetAvalancheSize(ne, ni);
         
-        // // Get information about all the electrons produced in the avalanche.
-        // unsigned int nBottomPlane = 0;
-        // unsigned int nTopPlane = 0;
-        // const int np = aval.GetNumberOfElectronEndpoints();
+        // Get information about all the electrons produced in the avalanche.
+        unsigned int nBottomPlane = 0;
+        unsigned int nTopPlane = 0;
+        const int np = aval.GetNumberOfElectronEndpoints();
 
-        // std::cout << "Number of electrons produced in avalanche: " << np << std::endl;
+        std::cout << "Number of electrons produced in avalanche: " << np << std::endl;
         
-        // double x1, y1, z1, t1, e1;
-        // double x2, y2, z2, t2, e2;
-        // // Loop over the electrons produced [should be only one!]
-        // for (int ie = 0; ie < np; ie++) {
+        double x1, y1, z1, t1, e1;
+        double x2, y2, z2, t2, e2;
+        // Loop over the electrons produced [should be only one!]
+        for (int ie = 0; ie < np; ie++) {
             
-        //     int status;
-        //     aval.GetElectronEndpoint(ie, x1, y1, z1, t1, e1, x2, y2, z2, t2, e2, status);
+            int status;
+            aval.GetElectronEndpoint(ie, x1, y1, z1, t1, e1, x2, y2, z2, t2, e2, status);
 
-        //     std::cout << "  Primary electron ends at (x, y, z) = ("
-        //             << x2 << ", " << y2 << ", " << z2
-        //             << ") with an energy of " << e2 << " eV.\n";
+            std::cout << "  Primary electron ends at (x, y, z) = ("
+                    << x2 << ", " << y2 << ", " << z2
+                    << ") with an energy of " << e2 << " eV.\n";
             
-        //     if (status == -5) {
+            if (status == -5) {
                 
-        //         // The electron left the drift medium.
+                // The electron left the drift medium.
                 
-        //         // Landed on the bottom electrode
-        //         if (z2 < -0.4) {
-        //             ++nBottomPlane;
-        //         }
-        //         else if (z2 > 0.4) {
-        //             ++nTopPlane;
-        //         }
-        //     }
-        //     else {
-        //         std::cout << "\nElectron " << ie << " of avalanche " << i   
-        //                 << " ended with a strange status (" << status << "):\n"
-        //                 << "(x1, y1, z1) = (" << x1 << ", " << y1 << ", " << z1 
-        //                 << "), t1 = " << t1 << ", e1 = " << e1 << "\n"
-        //                 << "(x2, y2, z2) = (" << x2 << ", " << y2 << ", " << z2 
-        //                 << "), t2 = " << t2 << ", e2 = " << e2 << "\n";
-        //     }
+                // Landed on the bottom electrode
+                if (z2 < -11) {
+                    ++nBottomPlane;
+                }
+                else if (z2 > -11) {
+                    ++nTopPlane;
+                }
+            }
+            else {
+                std::cout << "\nElectron " << ie << " of avalanche " << i   
+                        << " ended with a strange status (" << status << "):\n"
+                        << "(x1, y1, z1) = (" << x1 << ", " << y1 << ", " << z1 
+                        << "), t1 = " << t1 << ", e1 = " << e1 << "\n"
+                        << "(x2, y2, z2) = (" << x2 << ", " << y2 << ", " << z2 
+                        << "), t2 = " << t2 << ", e2 = " << e2 << "\n";
+            }
 
-        // }
+        }
         
-        // unsigned int nEl = 0;
-        // unsigned int nIon = 0;
-        // unsigned int nAtt = 0;
-        // unsigned int nInel = 0;
-        // unsigned int nExc = 0;
-        // unsigned int nSup = 0;
-        // gas.GetNumberOfElectronCollisions(nEl, nIon, nAtt, nInel, nExc, nSup);
-        // gas.ResetCollisionCounters();
-        // nVUV.push_back(nExc + ni);
+        unsigned int nEl = 0;
+        unsigned int nIon = 0;
+        unsigned int nAtt = 0;
+        unsigned int nInel = 0;
+        unsigned int nExc = 0;
+        unsigned int nSup = 0;
+        gas.GetNumberOfElectronCollisions(nEl, nIon, nAtt, nInel, nExc, nSup);
+        gas.ResetCollisionCounters();
+        nVUV.push_back(nExc + ni);
         
-        // std::cout << "  Number of electrons: " << ne
-        //         << "  Number of ions: " << ni << "\n"
-        //         << "  Number of excitations: " << nExc << "\n";
+        std::cout << "  Number of electrons: " << ne << " (" << nTopPlane 
+                << " of them ended on the top electrode and " << nBottomPlane 
+                << " on the bottom electrode)\n"
+                << "  Number of ions: " << ni << "\n"
+                << "  Number of excitations: " << nExc << "\n";
     
-        // metadata.push_back(std::to_string(event)     + "," + 
-        //                    std::to_string(ne)        + "," +
-        //                    std::to_string(ni)        + "," +
-        //                    std::to_string(nEl)       + "," + 
-        //                    std::to_string(nIon)      + "," + 
-        //                    std::to_string(nAtt)      + "," + 
-        //                    std::to_string(nInel)     + "," + 
-        //                    std::to_string(nExc)      + "," + 
-        //                    std::to_string(x0) + "," + 
-        //                    std::to_string(y0) + "," + 
-        //                    std::to_string(z0) + "," + 
-        //                    std::to_string(e1) + "," + 
-        //                    std::to_string(e2));
+        metadata.push_back(std::to_string(event)     + "," + 
+                           std::to_string(ne)        + "," +
+                           std::to_string(ni)        + "," +
+                           std::to_string(nEl)       + "," + 
+                           std::to_string(nIon)      + "," + 
+                           std::to_string(nAtt)      + "," + 
+                           std::to_string(nInel)     + "," + 
+                           std::to_string(nExc)      + "," + 
+                           std::to_string(nTopPlane) + "," +  
+                           std::to_string(nBottomPlane) + "," + 
+                           std::to_string(x0) + "," + 
+                           std::to_string(y0) + "," + 
+                           std::to_string(z0) + "," + 
+                           std::to_string(e1) + "," + 
+                           std::to_string(e2));
     
     }
 
