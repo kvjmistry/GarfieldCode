@@ -26,8 +26,8 @@ $ cmake ..
 make;
 
 To run:
-# evt id, num e-, seed, grid, jobid, mode [align, rot10, rot20, rot30, rot40, shift]
-./build/Mesh 0 1 1 0 0 0
+# evt id, num e-, seed, grid, jobid, mode [Aligned, Rotated, Shifted] gridfile datafile pressure
+./build/Mesh 0 1 1 0 0 align "<EField>.mphtxt" "<datafile>.txt" pressure
 */
 
 
@@ -88,6 +88,9 @@ int main(int argc, char * argv[]) {
     std::cout << "Using the grid? " << argv[4] << std::endl;
     std::cout << "JobID " << argv[5] << std::endl;
     std::cout << "Mode of simulation?: " << argv[6] << std::endl;
+    std::cout << "Mph file: " << argv[7] << std::endl;
+    std::cout << "data file: " << argv[8] << std::endl;
+    std::cout << "Pressure: " << argv[9] << std::endl;
     std::cout << "\n" << std::endl;
 
     // Set the event number
@@ -110,7 +113,8 @@ int main(int argc, char * argv[]) {
     // Gas Physics
     double temperature = 293.15; // Kelvin
     double torr = 750.062;
-    double pressure = 13.5*torr; // Give pressure in bar and convert it to torr
+    double pressure = std::stod(argv[9])*torr; // Give pressure in bar and convert it to torr
+    std::cout <<"The pressure is: " << std::stod(argv[9]) << std::endl;
 
     // Start Z
     double z0 = 0.85; //cm
@@ -133,7 +137,7 @@ int main(int argc, char * argv[]) {
         terminate = false;
     }
     else {
-        home = "/n/home05/kvjmistry/packages/GarfieldCode/Electroluminescence/Files/";
+        home = "/home/argon/Projects/Krishan/GarfieldCode/Electroluminescence/Files/";
         terminate = true;
         plotmaps = false;
 
@@ -143,70 +147,48 @@ int main(int argc, char * argv[]) {
     std::string datafile;
     std::string filehome;
     std::string fileconfig;
+    std::string extention;
 
-    if (strcmp(argv[6], "align") == 0){
-        // gridfile = "Aligned/Aligned_Mesh.mphtxt";
-        // datafile = "Aligned/Aligned_Mesh_Data";
-        // fileconfig = "Mesh_MaterialProperties.txt";
-        gridfile = "Aligned/Aligned_Mesh_Data_Rings.mphtxt";
-        datafile = "Aligned/Aligned_Mesh_Data_Rings.txt";
+    if (strcmp(argv[6], "Aligned") == 0){
+        std::cout << "Aligned" << std::endl;
+        gridfile = std::string(argv[7]);
+        datafile = std::string(argv[8]);
         fileconfig = "Mesh_MaterialPropertiesRings.txt";
+        extention = "Aligned/";
     }
     // This is the rotated mesh with the full unit cell
-    else if (strcmp(argv[6], "rot30") == 0) {
-        // gridfile = "Rotated/Rotated_Mesh.mphtxt";
-        // datafile = "Rotated/Rotated_Mesh_Data";
-        // fileconfig = "Mesh_MaterialPropertiesRotated.txt";
-        gridfile = "Rotated/Rotated_Mesh_Data_Rings.mphtxt";
-        datafile = "Rotated/Rotated_Mesh_Data_Rings.txt";
+    else if (strcmp(argv[6], "Rotated") == 0) {
+        std::cout << "Rotated" << std::endl;
+        gridfile = std::string(argv[7]);
+        datafile = std::string(argv[8]);
         fileconfig = "Mesh_MaterialPropertiesRings.txt";
+        extention = "Rotated/";
 
         // Modify the mesh boundary to a larger value
         MeshBoundary = 1.6; // cm
         MeshSampleR  = 1.6; // cm
 
     }
-    else if (strcmp(argv[6], "rot10") == 0) {
-        gridfile = "Rotated/Rotated10_Mesh.mphtxt";
-        datafile = "Rotated/Rotated10_Mesh_Data";
-        fileconfig = "Mesh_MaterialProperties.txt";
-    }
-    else if (strcmp(argv[6], "rot20") == 0) {
-        gridfile = "Rotated/Rotated20_Mesh.mphtxt";
-        datafile = "Rotated/Rotated20_Mesh_Data";
-        fileconfig = "Mesh_MaterialProperties.txt";
-    }
-    // else if (strcmp(argv[6], "rot30") == 0) {
-    //     gridfile = "Rotated/Rotated30_Mesh.mphtxt";
-    //     datafile = "Rotated/Rotated30_Mesh_Data";
-    //     fileconfig = "Mesh_MaterialProperties.txt";
-    // }
-    else if (strcmp(argv[6], "rot40") == 0) {
-        gridfile = "Rotated/Rotated30_Mesh.mphtxt";
-        datafile = "Rotated/Rotated30_Mesh_Data";
-        fileconfig = "Mesh_MaterialProperties.txt";
-    }
-    else if (strcmp(argv[6], "shift") == 0){
+    else if (strcmp(argv[6], "Shifted") == 0){
         std::cout << "Shifted" << std::endl;
-        // gridfile = "Shifted/Shifted_Mesh.mphtxt";
-        // datafile = "Shifted/Shifted_Mesh_Data";
-        // fileconfig = "Mesh_MaterialProperties.txt";
-        gridfile = "Shifted/Shifted_Mesh_Data_Rings.mphtxt";
-        datafile = "Shifted/Shifted_Mesh_Data_Rings.txt";
+        gridfile = std::string(argv[7]);
+        datafile = std::string(argv[8]);
         fileconfig = "Mesh_MaterialPropertiesRings.txt";
+        extention = "Shifted/";
     }
     else if (strcmp(argv[6], "disk") == 0){
         std::cout << "Disk" << std::endl;
-        // gridfile = "Disk/Disk_Mesh.mphtxt";
-        // datafile = "Disk/Disk_Mesh_Data";
-        // fileconfig = "Mesh_MaterialPropertiesDisk.txt";
-        gridfile = "Disk/Disk_Mesh_Data_Rings.mphtxt";
-        datafile = "Disk/Disk_Mesh_Data_Rings.txt";
+        gridfile = std::string(argv[7]);
+        datafile = std::string(argv[8]);
         fileconfig = "Mesh_MaterialPropertiesRingsDisk.txt";
+        extention = "Disk/";
     }
     else {
         std::cout << "Could not read in the mode!" << std::endl;
     }
+
+    std::cout <<"Mph path is: " << home + extention + gridfile << std::endl;
+    std::cout <<"Data path is: " << home + extention + datafile << std::endl;
     
 
     // ----- 
@@ -226,7 +208,7 @@ int main(int argc, char * argv[]) {
     
     // Setup the electric potential map
     ComponentComsol* fm = new ComponentComsol(); // Field Map
-    fm->Initialise(home + gridfile ,home + fileconfig, home + datafile, "mm");
+    fm->Initialise(home + extention + gridfile ,home + fileconfig, home + extention + datafile, "mm");
     
     // Print some information about the cell dimensions.
     fm->PrintRange();

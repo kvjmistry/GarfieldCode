@@ -129,7 +129,7 @@ int main(int argc, char * argv[]) {
     bool terminate;
 
     if (usegrid == 0){
-        home= "/Users/mistryk2/OneDrive - University of Texas at Arlington/Projects/CRAB/COMSOL/";
+        home= "/Users/mistryk2/OneDrive - University of Texas at Arlington/Projects/CRAB/COMSOL/IlkerComsol/data/";
         terminate = false;
     }
     else {

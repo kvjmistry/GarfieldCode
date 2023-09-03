@@ -1,17 +1,20 @@
 #!/bin/bash
-#SBATCH -J CRAB # A single job name for the array
+#SBATCH -J Mesh # A single job name for the array
 #SBATCH --nodes=1
 #SBATCH --mem 4000 # Memory request (6Gb)
-#SBATCH -t 0-12:00 # Maximum execution time (D-HH:MM)
-#SBATCH -o CRAB_%A_%a.out # Standard output
-#SBATCH -e CRAB_%A_%a.err # Standard error
+#SBATCH -t 0-10:00 # Maximum execution time (D-HH:MM)
+#SBATCH -o Mesh_%A_%a.out # Standard output
+#SBATCH -e Mesh_%A_%a.err # Standard error
 
 start=`date +%s`
 
 # Set the configurable variables
 JOBNAME="Mesh"
-TYPE="CRAB"
+TYPE="Aligned"
 N_EVENTS=20
+PRESSURE=13.5
+MPHFILE="Aligned_Mesh_Data_Rings.mphtxt"
+DATAFILE="Aligned_Mesh_Data_Rings.txt"
 
 # Create the directory
 cd /media/argon/NVME1/Krishan/
@@ -20,7 +23,7 @@ cd $JOBNAME/$TYPE/jobid_"${SLURM_ARRAY_TASK_ID}"
 
 # Setup nexus and run
 echo "Setting Up Garfield" 2>&1 | tee -a log_nexus_"${SLURM_ARRAY_TASK_ID}".txt
-source /home/argon/Projects/Krishan/garfieldpp/setup_garfield.sh
+source /home/argon/Projects/Krishan/garfieldpp/setup_garfieldpp.sh
 
 # Calculate the unique seed number	
 SEED=$((${N_EVENTS}*(${SLURM_ARRAY_TASK_ID} - 1) + ${N_EVENTS}))
@@ -28,8 +31,8 @@ echo "The seed number is: ${SEED}" 2>&1 | tee -a log_nexus_"${SLURM_ARRAY_TASK_I
 
 # NEXUS
 echo "Running Garfield" 2>&1 | tee -a log_nexus_"${SLURM_ARRAY_TASK_ID}".txt
-# evt id, num e-, seed, grid, jobid, mode [align, rot, shift]
-/home/argon/Projects/Krishan/GarfieldCode/Electroluminescence/build/CRAB ${SEED} ${N_EVENTS} ${SEED} 1 ${SLURM_ARRAY_TASK_ID} 2>&1 | tee -a log_nexus_"${SLURM_ARRAY_TASK_ID}".txt
+# evt id, num e-, seed, grid, jobid, mode [Aligned, Rotated, Shifted] gridfile datafile pressure
+/home/argon/Projects/Krishan/GarfieldCode/Electroluminescence/build/Mesh ${SEED} ${N_EVENTS} ${SEED} 1 ${SLURM_ARRAY_TASK_ID} ${TYPE} ${MPHFILE} ${DATAFILE} ${PRESSURE} 2>&1 | tee -a log_nexus_"${SLURM_ARRAY_TASK_ID}".txt
 
 echo; echo; echo;
 
