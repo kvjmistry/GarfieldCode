@@ -12,6 +12,16 @@ print("Using mode: ", Mode)
 print("with Option: ", option)
 print("Sampling with: ", sample_type)
 
+# Need these for different E/P values
+
+# E/P = 15/13.5
+bin_low = 200
+bin_high = 600
+
+# Standard
+# bin_low = 800
+# bin_high = 1400
+
 # Transform x, y positions to unit cell positions
 hexsize = (1.25+0.127/2.0)/(np.cos(30*np.pi/180))
 
@@ -197,8 +207,8 @@ for ev,x,y,ni,sigma,z in zip(hits["event_id"], hits["x"], hits["y"], hits["ni"],
             query = unitcell[(unitcell["q"] == temp_q) & (unitcell["r"] == temp_r)]
 
             bin_width = 20
-            bin_centers =  np.arange(810, 1390, bin_width)
-            hist, edges = np.histogram(query.excitation.values, bins = np.arange(800, 1400, bin_width), density=True)
+            bin_centers =  np.arange(bin_low + bin_width/2, bin_high-bin_width/2, bin_width)
+            hist, edges = np.histogram(query.excitation.values, bins = np.arange(bin_low, bin_high, bin_width), density=True)
             hist = hist*bin_width
 
             # Sample the distribution
