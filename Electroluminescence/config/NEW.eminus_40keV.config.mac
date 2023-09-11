@@ -37,6 +37,6 @@
 /PhysicsList/Nexus/electroluminescence false
 
 ##### PERSISTENCY #####
-/nexus/persistency/eventType background
- /nexus/persistency/outputFile NEW.eminus.next
+/nexus/persistency/event_type background
+/nexus/persistency/output_file NEW.eminus.next
 #/nexus/persistency/outputFile NEW.eminus_40keV.next
