@@ -1,7 +1,6 @@
 #!/bin/bash
 #SBATCH -J Trackres # A single job name for the array
-#SBATCH -c 1 # Number of cores
-#SBATCH -p shared # Partition
+#SBATCH --nodes=1
 #SBATCH --mem 4000 # Memory request (6Gb)
 #SBATCH -t 0-12:00 # Maximum execution time (D-HH:MM)
 #SBATCH -o Trackres_%A_%a.out # Standard output
