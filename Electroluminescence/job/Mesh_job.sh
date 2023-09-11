@@ -17,13 +17,13 @@ MPHFILE="Aligned_Mesh_Data_Rings.mphtxt"
 DATAFILE="Aligned_Mesh_Data_Rings.txt"
 
 # Create the directory
-cd /media/argon/NVME1/Krishan/
+cd /media/argon/HDD_8tb/
 mkdir -p $JOBNAME/$TYPE/jobid_"${SLURM_ARRAY_TASK_ID}"
 cd $JOBNAME/$TYPE/jobid_"${SLURM_ARRAY_TASK_ID}"
 
 # Setup nexus and run
 echo "Setting Up Garfield" 2>&1 | tee -a log_nexus_"${SLURM_ARRAY_TASK_ID}".txt
-source /home/argon/Projects/Krishan/garfieldpp/setup_garfieldpp.sh
+source /home/argon/Projects/Krishan/garfieldpp/setup_garfield.sh
 
 # Calculate the unique seed number	
 SEED=$((${N_EVENTS}*(${SLURM_ARRAY_TASK_ID} - 1) + ${N_EVENTS}))

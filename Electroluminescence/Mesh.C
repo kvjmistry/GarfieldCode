@@ -267,7 +267,7 @@ int main(int argc, char * argv[]) {
    
     // Make a histogram of the electron energy distribution.
     TH1D hEn("hEn","energy distribution", 1000, 0., 100.);
-    aval.EnableElectronEnergyHistogramming(&hEn);
+    // aval.EnableElectronEnergyHistogramming(&hEn);
 
     // Initialise object to plot the drift paths
     ViewDrift driftView;
@@ -417,6 +417,8 @@ int main(int argc, char * argv[]) {
         meshView->SetColor(2, kYellow + 3);
         meshView->EnableAxes();
         meshView->SetViewDrift(&driftView);
+        meshView->SetArea(-0.5, -1, 0.5, 1); // Adjust the range as needed
+        // meshView->SetCanvasColor(255, 255, 255);
         meshView->Plot();
 
     }

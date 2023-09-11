@@ -20,19 +20,20 @@ CONFIG=NEW.eminus.config.mac
 INIT=NEW.eminus.init.mac
 
 # Create the directory
-cd $SCRATCH/guenette_lab/Users/$USER/
+cd /media/argon/HDD_8tb/
 mkdir -p $JOBNAME/$Mode/jobid_"${SLURM_ARRAY_TASK_ID}"
 cd $JOBNAME/$Mode/jobid_"${SLURM_ARRAY_TASK_ID}"
 
 # Copy the files over
-cp ~/packages/GarfieldCode/Electroluminescence/config/* .
-cp ~/packages/GarfieldCode/Electroluminescence/CalcTrackRes.py .
-cp ~/packages/GarfieldCode/Electroluminescence/Maps/*.h5 .
+cp /home/argon/Projects/Krishan/GarfieldCode/Electroluminescence/config/${CONFIG} .
+cp /home/argon/Projects/Krishan/GarfieldCode/Electroluminescence/config/${INIT} .
+cp /home/argon/Projects/Krishan/GarfieldCode/Electroluminescence/CalcTrackRes.py .
+cp /home/argon/Projects/Krishan/GarfieldCode/Electroluminescence/Maps/*.h5 .
 
 # Setup nexus and run
 echo "Setting Up NEXUS and IC" 2>&1 | tee -a log_nexus_"${SLURM_ARRAY_TASK_ID}".txt
-source ~/packages/nexus/setup_nexus.sh
-source ~/packages/IC/setup_IC.sh
+source /home/argon/Projects/Krishan/nexus/setup_cluster.sh
+source /home/argon/Software/IC/setup_IC.sh
 
 for i in $(eval echo "{1..${FILES_PER_JOB}}"); do
 

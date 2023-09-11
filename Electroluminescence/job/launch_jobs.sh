@@ -10,7 +10,7 @@ EXTENSION=""
 # Set the electric field mode
 if [ "$EMODE" -eq 20 ]; then
     EXTENSION=""
-elif [ "$my_integer" -eq 15 ]; then
+elif [ "$EMODE" -eq 15 ]; then
     EXTENSION="_E15kV"
 else
     EXTENSION="_E30kV"
