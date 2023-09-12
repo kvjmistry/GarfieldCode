@@ -1,10 +1,10 @@
 #!/bin/bash
 
-JOB=Aligned
-#JOB=Rotated
-#JOB=Shifted
+# JOB=Aligned
+JOB=Rotated
+# JOB=Shifted
 PRESSURE=13.5
-EMODE=20 # Electric field config
+EMODE=15 # Electric field config
 EXTENSION=""
 
 # Set the electric field mode
@@ -32,13 +32,13 @@ if [ "$JOB" = "Aligned" ]; then
     sed -i "s#.*DATAFILE=.*#DATAFILE=\"Aligned_Mesh_Data_Rings${EXTENSION}.txt\"#" Mesh_job.sh
 #Rotated
 elif [ "$JOB" = "Rotated" ]; then
-    sed -i "s#.*MPHFILE=.*#MPHFILE=\"Aligned_Mesh_Data_Rings${EXTENSION}.mphtxt\"#" Mesh_job.sh
-    sed -i "s#.*DATAFILE=.*#DATAFILE=\"Aligned_Mesh_Data_Rings${EXTENSION}.txt\"#" Mesh_job.sh
+    sed -i "s#.*MPHFILE=.*#MPHFILE=\"Rotated_Mesh_Data_Rings${EXTENSION}.mphtxt\"#" Mesh_job.sh
+    sed -i "s#.*DATAFILE=.*#DATAFILE=\"Rotated_Mesh_Data_Rings${EXTENSION}.txt\"#" Mesh_job.sh
 # Shifted
 else
-    sed -i "s#.*MPHFILE=.*#MPHFILE=\"Aligned_Mesh_Data_Rings${EXTENSION}.mphtxt\"#" Mesh_job.sh
-    sed -i "s#.*DATAFILE=.*#DATAFILE=\"Aligned_Mesh_Data_Rings${EXTENSION}.txt\"#" Mesh_job.sh
+    sed -i "s#.*MPHFILE=.*#MPHFILE=\"Shifted_Mesh_Data_Rings${EXTENSION}.mphtxt\"#" Mesh_job.sh
+    sed -i "s#.*DATAFILE=.*#DATAFILE=\"Shifted_Mesh_Data_Rings${EXTENSION}.txt\"#" Mesh_job.sh
 fi
 
 
-sbatch --array=1-4000 Mesh_job.sh
+sbatch --array=1-1000 Mesh_job.sh
