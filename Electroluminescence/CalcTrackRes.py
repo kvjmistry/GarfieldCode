@@ -15,12 +15,12 @@ print("Sampling with: ", sample_type)
 # Need these for different E/P values
 
 # E/P = 15/13.5
-bin_low = 200
-bin_high = 600
+# bin_low = 200
+# bin_high = 600
 
 # Standard
-# bin_low = 800
-# bin_high = 1400
+bin_low = 800
+bin_high = 1400
 
 # Transform x, y positions to unit cell positions
 hexsize = (1.25+0.127/2.0)/(np.cos(30*np.pi/180))
