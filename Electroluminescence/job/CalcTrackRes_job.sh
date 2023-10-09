@@ -47,7 +47,7 @@ for i in $(eval echo "{1..${FILES_PER_JOB}}"); do
     nexus -n $N_EVENTS ${INIT} 2>&1 | tee -a log_nexus_"${SLURM_ARRAY_TASK_ID}".txt
 
     # Now run the Track resolution script
-    python CalcTrackRes.py $Mode $Option | tee -a log_nexus_"${SLURM_ARRAY_TASK_ID}".txt
+    python -u CalcTrackRes.py $Mode $Option | tee -a log_nexus_"${SLURM_ARRAY_TASK_ID}".txt
 
     echo; echo; echo;
 done
