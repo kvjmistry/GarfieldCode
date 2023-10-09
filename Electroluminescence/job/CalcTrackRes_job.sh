@@ -11,7 +11,7 @@ start=`date +%s`
 
 # Set the configurable variables
 JOBNAME="TrackRes"
-Mode="Aligned"
+Mode="Alignedv2"
 Option="bb"
 FILES_PER_JOB=1
 N_EVENTS=1000
