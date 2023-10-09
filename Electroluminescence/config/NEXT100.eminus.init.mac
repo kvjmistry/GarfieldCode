@@ -33,4 +33,4 @@
 /nexus/RegisterTrackingAction DefaultTrackingAction
 
 ### CONFIGURATION
-/nexus/RegisterMacro NEXT.eminus.config.mac
+/nexus/RegisterMacro NEXT100.eminus.config.mac
