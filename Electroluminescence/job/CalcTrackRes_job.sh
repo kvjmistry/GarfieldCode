@@ -2,7 +2,7 @@
 #SBATCH -J Trackres # A single job name for the array
 #SBATCH --nodes=1
 #SBATCH --mem 4000 # Memory request (6Gb)
-#SBATCH -t 0-12:00 # Maximum execution time (D-HH:MM)
+#SBATCH -t 0-24:00 # Maximum execution time (D-HH:MM)
 #SBATCH -o Trackres_%A_%a.out # Standard output
 #SBATCH -e Trackres_%A_%a.err # Standard error
 
@@ -15,11 +15,11 @@ Mode="Aligned"
 Option="bb"
 FILES_PER_JOB=1
 N_EVENTS=1000
-CONFIG=NEW.eminus.config.mac
-INIT=NEW.eminus.init.mac
+CONFIG=NEXT100.eminus.config.mac
+INIT=NEXT100.eminus.init.mac
 
 # Create the directory
-cd /media/argon/HDD_8tb/
+cd /media/argon/HDD_8tb/Krishan/
 mkdir -p $JOBNAME/$Mode/jobid_"${SLURM_ARRAY_TASK_ID}"
 cd $JOBNAME/$Mode/jobid_"${SLURM_ARRAY_TASK_ID}"
 
