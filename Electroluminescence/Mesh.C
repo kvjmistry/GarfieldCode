@@ -7,6 +7,7 @@
 #include <TApplication.h>
 #include <TCanvas.h>
 #include <TH1F.h>
+#include <TAxis.h>
 
 #include "Garfield/ComponentComsol.hh"
 #include "Garfield/MediumGas.hh"
@@ -406,7 +407,7 @@ int main(int argc, char * argv[]) {
     }
 
     if (plotmaps){
-        TCanvas* cf4 = new TCanvas("cf4", "", 600, 600);
+        TCanvas* cf4 = new TCanvas("cf4", "", 900, 600);
         ViewFEMesh* meshView = new ViewFEMesh();
         meshView->SetCanvas(cf4);
         meshView->SetComponent(fm);
