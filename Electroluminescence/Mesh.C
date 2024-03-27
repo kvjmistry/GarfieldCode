@@ -167,9 +167,9 @@ int main(int argc, char * argv[]) {
         gridfile = std::string(argv[7]);
         datafile = std::string(argv[8]);
         fileconfig = "Mesh_MaterialPropertiesRings.txt";
-        extention = "Rotated/";
-        if (usegrid != 0)
-            extention = "./";
+        extention = "./";
+        // if (usegrid != 0)
+        //     extention = "./";
 
         // Modify the mesh boundary to a larger value
         MeshBoundary = 1.6; // cm
@@ -217,7 +217,9 @@ int main(int argc, char * argv[]) {
     
     // Setup the electric potential map
     ComponentComsol* fm = new ComponentComsol(); // Field Map
-    fm->Initialise(home + extention + gridfile ,home + fileconfig, home + extention + datafile, "mm");
+    fm->Initialise(gridfile, fileconfig, datafile, "mm");
+    // fm->Initialise(home + extention + gridfile ,home + fileconfig, home + extention + datafile, "mm");
+    
     
     // Print some information about the cell dimensions.
     fm->PrintRange();

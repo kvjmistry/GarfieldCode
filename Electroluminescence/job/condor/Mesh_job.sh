@@ -15,6 +15,8 @@ SCRIPT=$3
 echo "Script name is: ${SCRIPT}"
 start=`date +%s`
 
+ls -ltrh
+
 # Setup nexus
 echo "Setting Up Garfield" 
 source /software/garfieldpp/setup_garfield.sh
@@ -38,6 +40,8 @@ echo "Running Garfield"
 echo; echo; echo;
 
 echo "FINISHED....EXITING"
+
+ls -ltrh
 
 end=`date +%s`
 let deltatime=end-start
