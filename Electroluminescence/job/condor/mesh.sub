@@ -43,4 +43,4 @@ request_disk = 6GB
 # max_idle = 2000
 
 # Tell HTCondor the number of instances to run:
-queue 1000
+queue 2

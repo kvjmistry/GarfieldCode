@@ -22,7 +22,7 @@ echo "Setting Up Garfield"
 source /software/garfieldpp/setup_garfield.sh
 
 # Set the configurable variables
-N_EVENTS=10
+N_EVENTS=1
 PRESSURE=10
 MPHFILE="Rotated_Mesh_Data_Rings.mphtxt"
 DATAFILE="Rotated_Mesh_Data_Rings.txt"

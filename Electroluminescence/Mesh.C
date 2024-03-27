@@ -168,9 +168,9 @@ int main(int argc, char * argv[]) {
         datafile = std::string(argv[8]);
         fileconfig = "Mesh_MaterialPropertiesRings.txt";
         extention = "./";
-        // if (usegrid != 0)
-        //     extention = "./";
-
+        std::cout << gridfile << std::endl;
+        std::cout << datafile << std::endl;
+        std::cout << fileconfig << std::endl;
         // Modify the mesh boundary to a larger value
         MeshBoundary = 1.6; // cm
         MeshSampleR  = 1.6; // cm
