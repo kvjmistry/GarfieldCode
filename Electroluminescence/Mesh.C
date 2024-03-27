@@ -139,7 +139,8 @@ int main(int argc, char * argv[]) {
     }
     else {
         // home = "/home/argon/Projects/Krishan/GarfieldCode/Electroluminescence/Files/";
-        home = "/home/krishan.mistry/code/GarfieldCode/Electroluminescence/Files"
+        // home = "/home/krishan.mistry/code/GarfieldCode/Electroluminescence/Files";
+        home = "./";
         terminate = true;
         plotmaps = false;
 
@@ -157,6 +158,8 @@ int main(int argc, char * argv[]) {
         datafile = std::string(argv[8]);
         fileconfig = "Mesh_MaterialPropertiesRings.txt";
         extention = "Aligned/";
+        if (usegrid != 0)
+            extention = "./";
     }
     // This is the rotated mesh with the full unit cell
     else if (strcmp(argv[6], "Rotated") == 0) {
@@ -165,6 +168,8 @@ int main(int argc, char * argv[]) {
         datafile = std::string(argv[8]);
         fileconfig = "Mesh_MaterialPropertiesRings.txt";
         extention = "Rotated/";
+        if (usegrid != 0)
+            extention = "./";
 
         // Modify the mesh boundary to a larger value
         MeshBoundary = 1.6; // cm
@@ -177,6 +182,8 @@ int main(int argc, char * argv[]) {
         datafile = std::string(argv[8]);
         fileconfig = "Mesh_MaterialPropertiesRings.txt";
         extention = "Shifted/";
+        if (usegrid != 0)
+            extention = "./";
     }
     else if (strcmp(argv[6], "disk") == 0){
         std::cout << "Disk" << std::endl;
@@ -428,7 +435,7 @@ int main(int argc, char * argv[]) {
     std::ofstream metafile;
     
     // Initialize the csv file
-    metafile.open(Form("Metadata_%s.csv", jobid));
+    metafile.open(Form("Metadata.csv", jobid));
 
     // metafile << "event,electrons,ions,elastic,ionisations,attachment,inelastic,excitation,top,bottom,start x,start y,start z, start E, end E"<< "\n";
     
@@ -444,7 +451,7 @@ int main(int argc, char * argv[]) {
     std::ofstream myfile;
     
     // Initialize the csv file
-    myfile.open(Form("EventInfo_%s.csv", jobid));
+    myfile.open(Form("EventInfo.csv", jobid));
     
     // myfile << "event,x,y,z,t" << "\n";
     for (unsigned int i = 0; i < evtInfo.size(); i++){
