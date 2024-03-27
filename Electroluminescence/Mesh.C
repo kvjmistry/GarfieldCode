@@ -138,7 +138,8 @@ int main(int argc, char * argv[]) {
         terminate = false;
     }
     else {
-        home = "/home/argon/Projects/Krishan/GarfieldCode/Electroluminescence/Files/";
+        // home = "/home/argon/Projects/Krishan/GarfieldCode/Electroluminescence/Files/";
+        home = "/home/krishan.mistry/code/GarfieldCode/Electroluminescence/Files"
         terminate = true;
         plotmaps = false;
 
