@@ -24,6 +24,7 @@ N_EVENTS=10
 PRESSURE=10
 MPHFILE="Rotated_Mesh_Data_Rings.mphtxt"
 DATAFILE="Rotated_Mesh_Data_Rings.txt"
+TYPE="Rotated"
 
 # Calculate the unique seed number	
 SEED=$((${N_EVENTS}*${JOBID} + ${N_EVENTS}))
