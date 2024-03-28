@@ -82,43 +82,14 @@ void userHandle(double x, double y, double z, double t,
 
 
 int main(int argc, char * argv[]) {
-    
-    std::cout << "The event number is: " << argv[1] << std::endl;
-    std::cout << "Simulating a total of " << argv[2] << " electrons" << std::endl;
-    std::cout << "The seed number is: " << argv[3] << std::endl;
-    std::cout << "Using the grid? " << argv[4] << std::endl;
-    std::cout << "JobID " << argv[5] << std::endl;
-    std::cout << "Mode of simulation?: " << argv[6] << std::endl;
-    std::cout << "Mph file: " << argv[7] << std::endl;
-    std::cout << "data file: " << argv[8] << std::endl;
-    std::cout << "Pressure: " << argv[9] << std::endl;
-    std::cout << "\n" << std::endl;
 
+    TApplication app("app", &argc, argv);
+    
     // Set the event number
     event = std::stoi(argv[1]);
 
-    TApplication app("app", &argc, argv);
-
-    // Simulation parameters
-
     // Number of primary electrons (avalanches) to simulate
     const unsigned int npe = std::stoi(argv[2]);
-    
-    // Choose whether to plot the field maps
-    bool plotmaps = true;
-
-    // Mesh Boundary Zone
-    double MeshBoundary = 0.65; // cm
-    double MeshSampleR = 0.45; // cm -- Circle radius to sample within
-
-    // Gas Physics
-    double temperature = 293.15; // Kelvin
-    double torr = 750.062;
-    double pressure = std::stod(argv[9])*torr; // Give pressure in bar and convert it to torr
-    std::cout <<"The pressure is: " << std::stod(argv[9]) << std::endl;
-
-    // Start Z
-    double z0 = 0.85; //cm
 
     // SEED
     int seed = std::stoi(argv[3]);
@@ -128,6 +99,37 @@ int main(int argc, char * argv[]) {
 
     // Job id
     char *jobid = argv[5];
+
+    std::string type = std::string(argv[6]);
+    std::string gridfile = std::string(argv[7]);
+    std::string datafile = std::string(argv[8]);
+    std::string fileconfig = "Mesh_MaterialPropertiesRings.txt";
+
+    // Gas Physics
+    double temperature = 293.15; // Kelvin
+    double torr = 750.062;
+    double pressure = std::stod(argv[9])*torr; // Give pressure in bar and convert it to torr
+
+    std::cout << "The event number is: " << event << std::endl;
+    std::cout << "Simulating a total of " << npe << " electrons" << std::endl;
+    std::cout << "The seed number is: " << seed << std::endl;
+    std::cout << "Using the grid? " << usegrid << std::endl;
+    std::cout << "JobID " << jobid << std::endl;
+    std::cout << "Mode of simulation?: " << type<< std::endl;
+    std::cout << "Mph file: " << gridfile << std::endl;
+    std::cout << "data file: " << datafile << std::endl;
+    std::cout << "Pressure: " << pressure << std::endl;
+    std::cout << "\n" << std::endl;
+    
+    // Choose whether to plot the field maps
+    bool plotmaps = true;
+
+    // Mesh Boundary Zone
+    double MeshBoundary = 0.65; // cm
+    double MeshSampleR = 0.45; // cm -- Circle radius to sample within
+
+    // Start Z
+    double z0 = 0.85; //cm
 
     // File Home
     std::string home;
@@ -146,58 +148,16 @@ int main(int argc, char * argv[]) {
 
     }
 
-    std::string gridfile;
-    std::string datafile;
-    std::string filehome;
-    std::string fileconfig;
-    std::string extention;
-
-    if (strcmp(argv[6], "Aligned") == 0){
-        std::cout << "Aligned" << std::endl;
-        gridfile = std::string(argv[7]);
-        datafile = std::string(argv[8]);
-        fileconfig = "Mesh_MaterialPropertiesRings.txt";
-        extention = "Aligned/";
-        if (usegrid != 0)
-            extention = "./";
-    }
+    
     // This is the rotated mesh with the full unit cell
-    else if (strcmp(argv[6], "Rotated") == 0) {
-        std::cout << "Rotated" << std::endl;
-        gridfile = std::string(argv[7]);
-        datafile = std::string(argv[8]);
-        fileconfig = "Mesh_MaterialPropertiesRings.txt";
-        extention = "./";
-        std::cout << gridfile << std::endl;
-        std::cout << datafile << std::endl;
-        std::cout << fileconfig << std::endl;
+    if (type == "Rotated") {
         // Modify the mesh boundary to a larger value
         MeshBoundary = 1.6; // cm
         MeshSampleR  = 1.6; // cm
-
-    }
-    else if (strcmp(argv[6], "Shifted") == 0){
-        std::cout << "Shifted" << std::endl;
-        gridfile = std::string(argv[7]);
-        datafile = std::string(argv[8]);
-        fileconfig = "Mesh_MaterialPropertiesRings.txt";
-        extention = "Shifted/";
-        if (usegrid != 0)
-            extention = "./";
-    }
-    else if (strcmp(argv[6], "disk") == 0){
-        std::cout << "Disk" << std::endl;
-        gridfile = std::string(argv[7]);
-        datafile = std::string(argv[8]);
-        fileconfig = "Mesh_MaterialPropertiesRingsDisk.txt";
-        extention = "Disk/";
-    }
-    else {
-        std::cout << "Could not read in the mode!" << std::endl;
     }
 
-    std::cout <<"Mph path is: " << home + extention + gridfile << std::endl;
-    std::cout <<"Data path is: " << home + extention + datafile << std::endl;
+    std::cout <<"Mph path is: " << home + "/"+ type + "/" + gridfile << std::endl;
+    std::cout <<"Data path is: " << home + "/"+ type + "/" + datafile << std::endl;
     
 
     // ----- 
@@ -217,8 +177,8 @@ int main(int argc, char * argv[]) {
     
     // Setup the electric potential map
     ComponentComsol* fm = new ComponentComsol(); // Field Map
-    fm->Initialise(gridfile, fileconfig, datafile, "mm");
-    // fm->Initialise(home + extention + gridfile ,home + fileconfig, home + extention + datafile, "mm");
+    // fm->Initialise(gridfile, fileconfig, datafile, "mm");
+    fm->Initialise(home + "/"+ type + "/" + gridfile, home + fileconfig, home + "/"+ type + "/" + datafile, "mm");
     
     
     // Print some information about the cell dimensions.
