@@ -101,8 +101,8 @@ int main(int argc, char * argv[]) {
     char *jobid = argv[5];
 
     std::string type     = std::string(argv[6]);
-    std::string gridfile = std::string(argv[7]);
-    std::string datafile = std::string(argv[8]);
+    std::string gridfile = "Rotated_Mesh_Data_Rings.mphtxt"
+    std::string datafile = "Rotated_Mesh_Data_Rings.txt"
     std::string fileconfig = "Mesh_MaterialPropertiesRings.txt";
 
     // Gas Physics
