@@ -157,8 +157,8 @@ int main(int argc, char * argv[]) {
         MeshSampleR  = 1.6; // cm
     }
 
-    std::cout <<"Mph path is: " << home + "/"+ type + "/" + gridfile << std::endl;
-    std::cout <<"Data path is: " << home + "/"+ type + "/" + datafile << std::endl;
+    // std::cout <<"Mph path is: " << home + "/"+ type + "/" + gridfile << std::endl;
+    // std::cout <<"Data path is: " << home + "/"+ type + "/" + datafile << std::endl;
     
 
     // ----- 
@@ -178,8 +178,8 @@ int main(int argc, char * argv[]) {
     
     // Setup the electric potential map
     ComponentComsol* fm = new ComponentComsol(); // Field Map
-    // fm->Initialise(gridfile, fileconfig, datafile, "mm");
-    fm->Initialise(home + "/"+ type + "/" + gridfile, home + fileconfig, home + "/"+ type + "/" + datafile, "mm");
+    fm->Initialise(gridfile, fileconfig, datafile, "mm");
+    // fm->Initialise(home + "/"+ type + "/" + gridfile, home + fileconfig, home + "/"+ type + "/" + datafile, "mm");
     
     
     // Print some information about the cell dimensions.
