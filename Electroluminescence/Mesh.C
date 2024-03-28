@@ -100,7 +100,7 @@ int main(int argc, char * argv[]) {
     // Job id
     char *jobid = argv[5];
 
-    std::string type = std::string(argv[6]);
+    std::string type     = std::string(argv[6]);
     std::string gridfile = std::string(argv[7]);
     std::string datafile = std::string(argv[8]);
     std::string fileconfig = "Mesh_MaterialPropertiesRings.txt";
@@ -115,10 +115,11 @@ int main(int argc, char * argv[]) {
     std::cout << "The seed number is: " << seed << std::endl;
     std::cout << "Using the grid? " << usegrid << std::endl;
     std::cout << "JobID " << jobid << std::endl;
-    std::cout << "Mode of simulation?: " << type<< std::endl;
+    std::cout << "Mode of simulation?: " << type << std::endl;
     std::cout << "Mph file: " << gridfile << std::endl;
     std::cout << "data file: " << datafile << std::endl;
     std::cout << "Pressure: " << pressure << std::endl;
+    std::cout << "fileconfig: " << fileconfig << std::endl;
     std::cout << "\n" << std::endl;
     
     // Choose whether to plot the field maps
