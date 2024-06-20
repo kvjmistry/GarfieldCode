@@ -1,9 +1,9 @@
 # nexus.sub
 
 # The job title here.
-jobname=DEMO_10bar_Center
+jobname=NEXT100_4bar_Center
 
-OSDF_LOCATION=osdf:///ospool/PROTECTED/krishan.mistry/
+OSDF_LOCATION=osdf:///ospool/ap40/data/krishan.mistry/
 HOME_LOCATION=/home/krishan.mistry/code/GarfieldCode/Electroluminescence/
 
 # newjobid = $(Process) + 100

@@ -101,8 +101,8 @@ int main(int argc, char * argv[]) {
     char *jobid = argv[5];
 
     std::string type     = std::string(argv[6]);
-    std::string gridfile = "Rotated_Mesh_Data_Rings.mphtxt";
-    std::string datafile = "Rotated_Mesh_Data_Rings.txt";
+    std::string gridfile = "Rotated_Mesh_Data_Rings_LPR.mphtxt";
+    std::string datafile = "Rotated_Mesh_Data_Rings_LPR.txt";
     std::string fileconfig = "Mesh_MaterialPropertiesRings.txt";
 
     // Gas Physics
@@ -165,15 +165,16 @@ int main(int argc, char * argv[]) {
 
 
     // Setup the gas.
-    MediumMagboltz gas("xe");
+    // MediumMagboltz gas("xe");
+    MediumMagboltz gas("ar");
     gas.SetTemperature(temperature);
     gas.SetPressure(pressure);
     gas.Initialise(true);  
     gas.PrintGas();
 
     // Turn this on to generate the magboltz table
-    // gas.GenerateGasTable(10);
-    // gas.WriteGasFile("xe.gas"); // Save the table. 
+    gas.GenerateGasTable(10);
+    gas.WriteGasFile("ar.gas"); // Save the table. 
 
     
     // Setup the electric potential map
