@@ -24,8 +24,8 @@ source /software/garfieldpp/setup_garfield.sh
 # Set the configurable variables
 N_EVENTS=1
 PRESSURE=4.2
-MPHFILE="Rotated_Mesh_Data_Rings.mphtxt"
-DATAFILE="Rotated_Mesh_Data_Rings.txt"
+MPHFILE="Rotated_Mesh_Data_Rings_LPR.mphtxt"
+DATAFILE="Rotated_Mesh_Data_Rings_LPR.txt"
 TYPE="Rotated"
 
 # Calculate the unique seed number	

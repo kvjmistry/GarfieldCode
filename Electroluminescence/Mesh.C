@@ -101,8 +101,8 @@ int main(int argc, char * argv[]) {
     char *jobid = argv[5];
 
     std::string type     = std::string(argv[6]);
-    std::string gridfile = "Rotated_Mesh_Data_Rings_LPR.mphtxt";
-    std::string datafile = "Rotated_Mesh_Data_Rings_LPR.txt";
+    std::string gridfile = "Files/Rotated/Rotated_Mesh_Data_Rings_LPR.mphtxt";
+    std::string datafile = "Files/Rotated/Rotated_Mesh_Data_Rings_LPR.txt";
     std::string fileconfig = "Mesh_MaterialPropertiesRings.txt";
 
     // Gas Physics
@@ -139,6 +139,7 @@ int main(int argc, char * argv[]) {
     if (usegrid == 0){
         home= "Files/";
         terminate = false;
+        fileconfig = home+fileconfig;
     }
     else {
         // home = "/home/argon/Projects/Krishan/GarfieldCode/Electroluminescence/Files/";
@@ -170,11 +171,12 @@ int main(int argc, char * argv[]) {
     gas.SetTemperature(temperature);
     gas.SetPressure(pressure);
     gas.Initialise(true);  
+    gas.LoadGasFile("Argon_4bar.gas");
     gas.PrintGas();
-
+    
     // Turn this on to generate the magboltz table
-    gas.GenerateGasTable(10);
-    gas.WriteGasFile("ar.gas"); // Save the table. 
+    // gas.GenerateGasTable(10);
+    // gas.WriteGasFile("ar.gas"); // Save the table. 
 
     
     // Setup the electric potential map
@@ -390,7 +392,7 @@ int main(int argc, char * argv[]) {
         meshView->SetColor(2, kYellow + 3);
         meshView->EnableAxes();
         meshView->SetViewDrift(&driftView);
-        meshView->SetArea(-0.5, -1, 0.5, 1); // Adjust the range as needed
+        meshView->SetArea(-MeshSampleR, -1, MeshSampleR, 1); // Adjust the range as needed
         // meshView->SetCanvasColor(255, 255, 255);
         meshView->Plot();
 
@@ -399,7 +401,7 @@ int main(int argc, char * argv[]) {
     std::ofstream metafile;
     
     // Initialize the csv file
-    metafile.open(Form("Metadata.csv", jobid));
+    metafile.open("Metadata.csv");
 
     // metafile << "event,electrons,ions,elastic,ionisations,attachment,inelastic,excitation,top,bottom,start x,start y,start z, start E, end E"<< "\n";
     
@@ -415,7 +417,7 @@ int main(int argc, char * argv[]) {
     std::ofstream myfile;
     
     // Initialize the csv file
-    myfile.open(Form("EventInfo.csv", jobid));
+    myfile.open("EventInfo.csv");
     
     // myfile << "event,x,y,z,t" << "\n";
     for (unsigned int i = 0; i < evtInfo.size(); i++){
