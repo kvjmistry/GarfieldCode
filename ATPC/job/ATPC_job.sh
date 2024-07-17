@@ -8,12 +8,24 @@
 
 start=`date +%s`
 
+format_number() {
+    local number=$1
+    if [ $number -lt 10 ]; then
+        printf "0%d" $number
+    else
+        printf "%d" $number
+    fi
+}
+
 # Set the configurable variables
 JOBNAME="GarfieldATPC"
 VOLTAGE=8000
 HEX=20
 RADIUS=10
-MPHFILE="/home/argon/Projects/Krishan/garfieldpp/ATPC/build/${HEX}mmHex/${HEX}mmHex.mphtxt"
+
+HEXFOLDER=$(format_number ${HEX})
+
+MPHFILE="/home/argon/Projects/Krishan/garfieldpp/ATPC/build/${HEXFOLDER}mmHex/${HEX}mmHex.mphtxt"
 
 # Create the directory
 cd /media/argon/HDD_8tb/
