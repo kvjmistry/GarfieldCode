@@ -19,6 +19,6 @@ for r in {1..10}; do
         sed -i "s#.*VOLTAGE=.*#VOLTAGE=${voltage}#" ATPC_job.sh
         sed -i "s#.*HEX=.*#HEX=${fieldMaps[r-1]}#" ATPC_job.sh
         sed -i "s#.*RADIUS=.*#RADIUS=${r}#" ATPC_job.sh
-        sbatch ${SCRIPT}
+        sbatch --array=1 ${SCRIPT}
     done
 done
