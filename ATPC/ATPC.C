@@ -27,7 +27,9 @@ void RunSimulation(const std::string& fieldMapBase, std::ofstream& outfile, doub
     MediumMagboltz gas("xe", 98., "co2", 2.0);
     gas.SetTemperature(293.15);
     gas.SetPressure(760.);
-    gas.LoadIonMobility("../IonMobility_Xe+_Xe.txt");
+    gas.LoadIonMobility("/home/argon/Projects/Krishan/garfieldpp/Data/IonMobility_Xe+_Xe.txt");
+    gas.SetMaxElectronEnergy(200.);
+    gas.Initialise();
 
     ComponentComsol fm;
     std::string fieldMap = fieldMapBase;
@@ -50,7 +52,7 @@ void RunSimulation(const std::string& fieldMapBase, std::ofstream& outfile, doub
     Garfield::Medium* medium = nullptr;
     int status = 0;
     sensor.ElectricField(0, 0, 1.5 * i_diam, ef[0], ef[1], ef[2], medium, status);
-    constexpr unsigned int nEvents = 1;
+    constexpr unsigned int nEvents = 100;
     for (unsigned int i = 0; i < nEvents; ++i) {
         if (i % 10 == 0){
         std::cout << "Event =  " << i  << "/" << nEvents << "\n";
@@ -76,42 +78,45 @@ void RunSimulation(const std::string& fieldMapBase, std::ofstream& outfile, doub
 }
 
 int main(int argc, char *argv[]) {
-    TApplication app("app", &argc, argv);
 
-    // std::array<double, 8> voltages = {2500, 3000, 3500, 4000, 5000, 6000, 7000, 8000};
-    // std::array<std::string, 10> fieldMaps = {
-    //     "02mmHex/2mmHex.mphtxt", "04mmHex/4mmHex.mphtxt", "06mmHex/6mmHex.mphtxt",
-    //     "08mmHex/8mmHex.mphtxt", "10mmHex/10mmHex.mphtxt", "12mmHex/12mmHex.mphtxt",
-    //     "14mmHex/14mmHex.mphtxt", "16mmHex/16mmHex.mphtxt", "18mmHex/18mmHex.mphtxt",
-    //     "20mmHex/20mmHex.mphtxt"
-    // };
+    std::array<double, 8> voltages = {2500, 3000, 3500, 4000, 5000, 6000, 7000, 8000};
+    std::array<std::string, 10> fieldMaps = {
+        "02mmHex/2mmHex.mphtxt", "04mmHex/4mmHex.mphtxt", "06mmHex/6mmHex.mphtxt",
+        "08mmHex/8mmHex.mphtxt", "10mmHex/10mmHex.mphtxt", "12mmHex/12mmHex.mphtxt",
+        "14mmHex/14mmHex.mphtxt", "16mmHex/16mmHex.mphtxt", "18mmHex/18mmHex.mphtxt",
+        "20mmHex/20mmHex.mphtxt"
+    };
+
+    for (unsigned int r = 1; r <= 10; ++r) {
+        std::cout << "Current Radius = " << r  <<  std::endl;
+        for (const auto& voltage : voltages) {
+            std::cout << "Current Voltage = " << voltage <<  std::endl;
+            double i_diam = 0.1 * r;
+            double o_diam = 0.125 * r;
+            double cell_height = 0.25 * r;
+            RunSimulation(fieldMaps[r-1], outfile, i_diam, o_diam, cell_height, voltage, r);
+        }
+    }
 
     std::string outputFile = "combined_electron_endpoints_gain.txt";
     std::ofstream outfile(outputFile, std::ios::out);
     outfile << "field,radius,evnt,gain\n";
 
-    // for (unsigned int r = 1; r <= 10; ++r) {
-    //     std::cout << "Current Radius = " << r  <<  std::endl;
-    //     for (const auto& voltage : voltages) {
-    //         std::cout << "Current Voltage = " << voltage <<  std::endl;
-    //         double i_diam = 0.1 * r;
-    //         double o_diam = 0.125 * r;
-    //         double cell_height = 0.25 * r;
-    //         RunSimulation(fieldMaps[r-1], outfile, i_diam, o_diam, cell_height, voltage, r);
-    //     }
-    // }
+    int r = std::stoi(argv[1]);
+    double voltage = std::stoi(argv[2]);
+    const char* fieldmap_char = argv[3];
+    std::string fieldmap = fieldmap_char;
+    std::cout << "Radius = " << r  << ",  Volatage: " << voltage <<  std::endl;
+    std::cout << "fieldmap: " << fieldmap  << std::endl;
 
-    int r = 1;
     double i_diam = 0.1 * r;
     double o_diam = 0.125 * r;
     double cell_height = 0.25 * r;
-    double voltage = 3000;
 
-    RunSimulation("../2mmHex.mphtxt", outfile, i_diam, o_diam, cell_height, voltage, r);
+    RunSimulation(fieldmap, outfile, i_diam, o_diam, cell_height, voltage, r);
 
 
     outfile.close();
-    app.Run();
     return 0;
 }
 
