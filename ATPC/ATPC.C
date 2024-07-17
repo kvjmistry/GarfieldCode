@@ -35,7 +35,7 @@ void RunSimulation(const std::string& fieldMapBase, std::ofstream& outfile, doub
     std::string fieldMap = fieldMapBase;
     std::string fieldFile = fieldMapBase;
     fieldFile.replace(fieldFile.find(".mphtxt"), 7, "Field_" + std::to_string(static_cast<int>(voltage)) + "V.txt");
-    fm.Initialise(fieldMap, "../HexMat.txt", fieldFile, "m");
+    fm.Initialise(fieldMap, "/home/argon/Projects/Krishan/garfieldpp/ATPC/HexMat.txt", fieldFile, "m");
     fm.SetGas(&gas);
 
     Sensor sensor;
