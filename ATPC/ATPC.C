@@ -79,24 +79,24 @@ void RunSimulation(const std::string& fieldMapBase, std::ofstream& outfile, doub
 
 int main(int argc, char *argv[]) {
 
-    std::array<double, 8> voltages = {2500, 3000, 3500, 4000, 5000, 6000, 7000, 8000};
-    std::array<std::string, 10> fieldMaps = {
-        "02mmHex/2mmHex.mphtxt", "04mmHex/4mmHex.mphtxt", "06mmHex/6mmHex.mphtxt",
-        "08mmHex/8mmHex.mphtxt", "10mmHex/10mmHex.mphtxt", "12mmHex/12mmHex.mphtxt",
-        "14mmHex/14mmHex.mphtxt", "16mmHex/16mmHex.mphtxt", "18mmHex/18mmHex.mphtxt",
-        "20mmHex/20mmHex.mphtxt"
-    };
+    // std::array<double, 8> voltages = {2500, 3000, 3500, 4000, 5000, 6000, 7000, 8000};
+    // std::array<std::string, 10> fieldMaps = {
+    //     "02mmHex/2mmHex.mphtxt", "04mmHex/4mmHex.mphtxt", "06mmHex/6mmHex.mphtxt",
+    //     "08mmHex/8mmHex.mphtxt", "10mmHex/10mmHex.mphtxt", "12mmHex/12mmHex.mphtxt",
+    //     "14mmHex/14mmHex.mphtxt", "16mmHex/16mmHex.mphtxt", "18mmHex/18mmHex.mphtxt",
+    //     "20mmHex/20mmHex.mphtxt"
+    // };
 
-    for (unsigned int r = 1; r <= 10; ++r) {
-        std::cout << "Current Radius = " << r  <<  std::endl;
-        for (const auto& voltage : voltages) {
-            std::cout << "Current Voltage = " << voltage <<  std::endl;
-            double i_diam = 0.1 * r;
-            double o_diam = 0.125 * r;
-            double cell_height = 0.25 * r;
-            RunSimulation(fieldMaps[r-1], outfile, i_diam, o_diam, cell_height, voltage, r);
-        }
-    }
+    // for (unsigned int r = 1; r <= 10; ++r) {
+    //     std::cout << "Current Radius = " << r  <<  std::endl;
+    //     for (const auto& voltage : voltages) {
+    //         std::cout << "Current Voltage = " << voltage <<  std::endl;
+    //         double i_diam = 0.1 * r;
+    //         double o_diam = 0.125 * r;
+    //         double cell_height = 0.25 * r;
+    //         RunSimulation(fieldMaps[r-1], outfile, i_diam, o_diam, cell_height, voltage, r);
+    //     }
+    // }
 
     std::string outputFile = "combined_electron_endpoints_gain.txt";
     std::ofstream outfile(outputFile, std::ios::out);
